@@ -1,6 +1,12 @@
 package com.bookstore.bookstore.dao;
 
-/* 与数据库直接打交道, Your own access control logic */
-/* 因为目前直接使用jparepository中的方法, 因此该层为空 */
-public interface UserDao {
+import com.bookstore.bookstore.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserDao extends JpaRepository<User, Long> {
+    User findByUsernameAndPassword(String username, String password);
+    User findByUsername(String username);
+    User findById(Integer id);
 }

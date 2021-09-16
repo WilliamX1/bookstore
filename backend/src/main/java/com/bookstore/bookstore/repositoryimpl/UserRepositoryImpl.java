@@ -1,12 +1,12 @@
-package com.bookstore.bookstore.repoimpl;
+package com.bookstore.bookstore.repositoryimpl;
 
 import com.alibaba.fastjson.JSON;
 import com.bookstore.bookstore.entity.*;
-import com.bookstore.bookstore.repo.UserRepo;
-import com.bookstore.bookstore.repository.BookRepository;
-import com.bookstore.bookstore.repository.CartRepository;
-import com.bookstore.bookstore.repository.OrderRepository;
 import com.bookstore.bookstore.repository.UserRepository;
+import com.bookstore.bookstore.dao.BookDao;
+import com.bookstore.bookstore.dao.CartDao;
+import com.bookstore.bookstore.dao.OrderDao;
+import com.bookstore.bookstore.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,32 +14,32 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserRepoImpl implements UserRepo {
+public class UserRepositoryImpl implements UserRepository {
     @Autowired
-    private UserRepository userRepository;
+    private UserDao userDao;
     @Autowired
-    private CartRepository cartRepository;
+    private CartDao cartDao;
     @Autowired
-    private BookRepository bookRepository;
+    private BookDao bookDao;
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderDao orderDao;
     /* 获取用户 */
     public User getUserByUsernameAndPassword(String username, String password) {
-        return userRepository.findByUsernameAndPassword(username, password);
+        return userDao.findByUsernameAndPassword(username, password);
     };
     /* 仅通过用户名获取用户信息 */
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userDao.findByUsername(username);
     };
     /*获取用户信息*/
     public List<User> getUsers () {
-        return userRepository.findAll();
+        return userDao.findAll();
     }
     /*修改用户*/
     public Integer editUserState(Integer userId, String changedState) {
-        User user = userRepository.findById(userId);
+        User user = userDao.findById(userId);
         user.setState(changedState);
-        userRepository.save(user);
+        userDao.save(user);
         return 0;
     }
     /*用户注册*/
@@ -48,18 +48,18 @@ public class UserRepoImpl implements UserRepo {
         user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
-        userRepository.save(user);
+        userDao.save(user);
         return user;
     }
     /* 修改购物车书籍数量 */
     public Integer changeBookCount (Integer userid, Integer bookid, Integer bookcount, Boolean isadd) {
         /*保存购物车信息*/
-        User user = userRepository.findById(userid);
+        User user = userDao.findById(userid);
         Cart cart = user.getCart();
         if (cart == null) {
             cart = new Cart();
             cart.setUser(user);
-            userRepository.save(user);
+            userDao.save(user);
         }
 
         /*保存购物车内容信息*/
@@ -67,7 +67,7 @@ public class UserRepoImpl implements UserRepo {
         CartItem cartItem = null;
 
         /* 寻找购物车项 */
-        Book book = bookRepository.findById(bookid);
+        Book book = bookDao.findById(bookid);
         for (CartItem item : cartItems) {
             if (book.equals(item.getBook())) {
                 cartItem = item;
@@ -90,12 +90,12 @@ public class UserRepoImpl implements UserRepo {
         if (cartItem.getBookcount() == 0)
             cart.deleteCartItem(cartItem);
 
-        cartRepository.save(cart);
+        cartDao.save(cart);
         return 0;
     }
     /* 获取购物车 */
     public List<CartItem> getCartItems (Integer userid) {
-        User user = userRepository.findById(userid);
+        User user = userDao.findById(userid);
         Cart cart = user.getCart();
         if (cart != null) return cart.getCartItems();
         else return new ArrayList<>();
@@ -104,7 +104,7 @@ public class UserRepoImpl implements UserRepo {
     public List<CartItem> getCartItemsByBookname(Integer userid, String searchbookstr) {
         List<CartItem> cartItems = getCartItems(userid);
 
-        List<Book> books = bookRepository.findByBooknameContaining(searchbookstr);
+        List<Book> books = bookDao.findByBooknameContaining(searchbookstr);
         List<Integer> bookids = new ArrayList<>();
         books.forEach(book -> {
             bookids.add(book.getId());
@@ -117,8 +117,8 @@ public class UserRepoImpl implements UserRepo {
         /* 获取指定时间内订单项 */
         List<Order> orders;
         if (startdate == null && enddate == null) {
-            orders = orderRepository.findAll();
-        } else orders = orderRepository.findAllByTimestampBetween(startdate, enddate);
+            orders = orderDao.findAll();
+        } else orders = orderDao.findAllByTimestampBetween(startdate, enddate);
 
         /* 对用户消费进行统计 */
         Map<String, Integer> map = new HashMap<>();

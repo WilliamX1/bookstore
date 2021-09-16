@@ -1,6 +1,15 @@
 package com.bookstore.bookstore.dao;
 
-/* 与数据库直接打交道, Your own access control logic */
-/* 因为目前直接使用jparepository中的方法, 因此该层为空 */
-public interface OrderDao {
+import com.bookstore.bookstore.entity.Order;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
+
+@Repository
+public interface OrderDao extends JpaRepository<Order, Long> {
+    List<Order> findById(Integer id);
+    List<Order> findAllByTimestampBetween(Date startdate, Date enddate);
+    List<Order> findAll();
 }
