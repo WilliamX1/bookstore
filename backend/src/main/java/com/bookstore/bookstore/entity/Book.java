@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import java.util.List;
 public class Book {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "book")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<CartItem> cartItemList = new ArrayList<>();
 
     public void addCartItem(CartItem cartItem) {
@@ -34,6 +36,7 @@ public class Book {
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "book")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<OrderItem> orderItemList = new ArrayList<>();
 
     public void addOrderItem(OrderItem orderItem) { this.orderItemList.add(orderItem);};

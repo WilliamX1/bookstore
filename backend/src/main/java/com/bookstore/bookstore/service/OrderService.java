@@ -2,6 +2,7 @@ package com.bookstore.bookstore.service;
 
 import com.bookstore.bookstore.entity.Order;
 import com.bookstore.bookstore.entity.OrderItem;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;

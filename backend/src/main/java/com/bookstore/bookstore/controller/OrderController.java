@@ -1,11 +1,16 @@
 package com.bookstore.bookstore.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.bookstore.bookstore.activemq.QueueProducer;
+import com.bookstore.bookstore.constant.OrderConstant;
 import com.bookstore.bookstore.entity.Order;
 import com.bookstore.bookstore.entity.User;
 import com.bookstore.bookstore.service.BookService;
 import com.bookstore.bookstore.service.OrderService;
 import com.bookstore.bookstore.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -27,8 +32,15 @@ public class OrderController {
     @Autowired
     private BookService bookService;
 
+    QueueProducer orderProducer = new QueueProducer(OrderConstant.queueName);
+
+    private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
+    private static final String QUEUE_NAME = "order";
+
     @GetMapping("/testOrder")
-    public String test () { return "This is a test order!"; }
+    public String test () {
+        return "This will reach here";
+    }
 
     @PostMapping("/addOrderFromUser")
     public ResponseEntity<Integer> addOrderFromUser (@RequestParam String username,
@@ -38,37 +50,49 @@ public class OrderController {
                                                      @RequestParam String bookpricestr,
                                                      @RequestParam String receivername,
                                                      @RequestParam String address) {
-        User user = userService.getUserByUsernameAndPassword(username, password);
-        List<Integer> bookid = JSON.parseArray(bookidstr, Integer.class);
-        List<Integer> bookcount = JSON.parseArray(bookcountstr, Integer.class);
-        List<Integer> bookprice = JSON.parseArray(bookpricestr, Integer.class);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("username", username);
+        jsonObject.put("password", password);
+        jsonObject.put("bookidstr", bookidstr);
+        jsonObject.put("bookcountstr", bookcountstr);
+        jsonObject.put("bookpricestr", bookpricestr);
+        jsonObject.put("receivername", receivername);
+        jsonObject.put("address", address);
 
-        if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        else {
-            Integer userid = user.getId();
-            /*计算订单总价*/
-            Integer len = bookid.size();
-            Integer totalprice = 0;
-            for (Integer i = 0; i < len; i++) {
-                totalprice += bookcount.get(i) * bookprice.get(i);
-            }
+        orderProducer.sendMsg(jsonObject);
 
-            for (Integer i = 0; i < len; i++) {
-                if (bookService.changeBookInventory(bookid.get(i), -bookcount.get(i), true) == -1) {
-                    /* 将其他书籍库存加回来 */
-                    for (Integer j = i; j >= 0; j--) {
-                        bookService.changeBookInventory(bookid.get(j), bookcount.get(j), true);
-                    };
-                    return new ResponseEntity<>(-1, HttpStatus.NOT_ACCEPTABLE);
-                };
-            };
-            for (Integer i = 0; i < len; i++) {
-                userService.changeBookCount(userid, bookid.get(i), -bookcount.get(i), true);
-            }
-
-            Integer ans = orderService.addOrderFromUser(userid, totalprice, receivername, address, bookid, bookcount, bookprice);
-            return new ResponseEntity<>(ans, HttpStatus.OK);
-        }
+//        User user = userService.getUserByUsernameAndPassword(username, password);
+//        List<Integer> bookid = JSON.parseArray(bookidstr, Integer.class);
+//        List<Integer> bookcount = JSON.parseArray(bookcountstr, Integer.class);
+//        List<Integer> bookprice = JSON.parseArray(bookpricestr, Integer.class);
+//
+//        if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        else {
+//            Integer userid = user.getId();
+//            /*计算订单总价*/
+//            Integer len = bookid.size();
+//            Integer totalprice = 0;
+//            for (Integer i = 0; i < len; i++) {
+//                totalprice += bookcount.get(i) * bookprice.get(i);
+//            }
+//
+//            for (Integer i = 0; i < len; i++) {
+//                if (bookService.changeBookInventory(bookid.get(i), -bookcount.get(i), true) == -1) {
+//                    /* 将其他书籍库存加回来 */
+//                    for (Integer j = i; j >= 0; j--) {
+//                        bookService.changeBookInventory(bookid.get(j), bookcount.get(j), true);
+//                    };
+//                    return new ResponseEntity<>(-1, HttpStatus.NOT_ACCEPTABLE);
+//                };
+//            };
+//            for (Integer i = 0; i < len; i++) {
+//                userService.changeBookCount(userid, bookid.get(i), -bookcount.get(i), true);
+//            }
+//
+//            Integer ans = orderService.addOrderFromUser(userid, totalprice, receivername, address, bookid, bookcount, bookprice);
+//            return new ResponseEntity<>(ans, HttpStatus.OK);
+//        }
+        return new ResponseEntity<>(1, HttpStatus.OK);
     }
     @GetMapping("getOrders")
     public ResponseEntity<List<Order>> getOrders (String username, String password) {

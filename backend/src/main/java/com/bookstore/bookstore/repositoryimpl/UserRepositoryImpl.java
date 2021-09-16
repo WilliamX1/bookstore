@@ -75,7 +75,7 @@ public class UserRepositoryImpl implements UserRepository {
         /* 寻找购物车项 */
         Book book = bookDao.findById(bookid);
         for (CartItem item : cartItems) {
-            if (book.equals(item.getBook())) {
+            if (book.getId().equals(item.getBook().getId())) {
                 cartItem = item;
                 break;
             }
