@@ -9,6 +9,8 @@ import java.util.List;
 public interface UserService {
     /*获取用户信息*/
     List<User> getUsers();
+    /* 获取用户信息 */
+    List<User> getUsers(Integer userId);
     /* 通过密码和用户名获取用户信息 */
     User getUserByUsernameAndPassword(String username, String password);
     /* 仅通过用户名获取用户信息 */

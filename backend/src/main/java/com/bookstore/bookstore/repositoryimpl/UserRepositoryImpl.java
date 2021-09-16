@@ -31,11 +31,17 @@ public class UserRepositoryImpl implements UserRepository {
     public User getUserByUsername(String username) {
         return userDao.findByUsername(username);
     };
-    /*获取用户信息*/
+    /* 获取用户信息 */
     public List<User> getUsers () {
         return userDao.findAll();
     }
-    /*修改用户*/
+    /* 获取用户信息 */
+    public List<User> getUsers (Integer userId) {
+        String role = userDao.findById(userId).getRole();
+        if (Objects.equals(role, "ADMIN")) return getUsers();
+        else return null;
+    }
+    /* 修改用户 */
     public Integer editUserState(Integer userId, String changedState) {
         User user = userDao.findById(userId);
         user.setState(changedState);

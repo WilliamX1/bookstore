@@ -13,6 +13,8 @@ public interface UserRepository {
     User getUserByUsername(String username);
     /*获取用户信息*/
     List<User> getUsers ();
+    /* 获取用户信息 */
+    List<User> getUsers(Integer userId);
     /*修改用户*/
     Integer editUserState(Integer userid, String changedstate);
     /*用户注册*/

@@ -5,18 +5,24 @@ import com.bookstore.bookstore.entity.User;
 import com.bookstore.bookstore.repository.UserRepository;
 import com.bookstore.bookstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Scope("prototype")
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     /*获取用户信息*/
     public List<User> getUsers () {
         return userRepository.getUsers();
+    }
+    /* 获取用户信息 */
+    public List<User> getUsers(Integer userId) {
+        return userRepository.getUsers(userId);
     }
     /* 获取用户 */
     public User getUserByUsernameAndPassword(String username, String password) {

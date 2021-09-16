@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    WebApplicationContext webApplicationContext;
 
     @GetMapping("/testUser")
     public String test () {
@@ -43,8 +47,15 @@ public class UserController {
     public ResponseEntity<List<User>> getUsers (@RequestParam (required = false) String username,
                                                  @RequestParam (required = false) String password) {
         User user = userService.getUserByUsernameAndPassword(username, password);
+        System.out.println(userService);
         if (user != null && "ADMIN".equals(user.getRole())) return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
         else return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+    }
+    @GetMapping(path = "/getUsers/{userId}")
+    public ResponseEntity<List<User>> getUsers(@PathVariable("userId") Integer userId) {
+        UserService userService = webApplicationContext.getBean(UserService.class);
+        System.out.println(userService);
+        return new ResponseEntity<>(userService.getUsers(userId), HttpStatus.OK);
     }
     @PostMapping(path = "/editUser")
     public ResponseEntity<Integer> editUserState(String username, String password, Integer userid, String changedstate) {
