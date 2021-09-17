@@ -1,6 +1,5 @@
 package com.bookstore.bookstore.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bookstore.bookstore.activemq.QueueProducer;
 import com.bookstore.bookstore.constant.OrderConstant;
@@ -32,7 +31,7 @@ public class OrderController {
     @Autowired
     private BookService bookService;
 
-    QueueProducer orderProducer = new QueueProducer(OrderConstant.queueName);
+    QueueProducer orderProducer = new QueueProducer(OrderConstant.QUEUE_NAME);
 
     private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
     private static final String QUEUE_NAME = "order";
@@ -60,39 +59,7 @@ public class OrderController {
         jsonObject.put("address", address);
 
         orderProducer.sendMsg(jsonObject);
-
-//        User user = userService.getUserByUsernameAndPassword(username, password);
-//        List<Integer> bookid = JSON.parseArray(bookidstr, Integer.class);
-//        List<Integer> bookcount = JSON.parseArray(bookcountstr, Integer.class);
-//        List<Integer> bookprice = JSON.parseArray(bookpricestr, Integer.class);
-//
-//        if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//        else {
-//            Integer userid = user.getId();
-//            /*计算订单总价*/
-//            Integer len = bookid.size();
-//            Integer totalprice = 0;
-//            for (Integer i = 0; i < len; i++) {
-//                totalprice += bookcount.get(i) * bookprice.get(i);
-//            }
-//
-//            for (Integer i = 0; i < len; i++) {
-//                if (bookService.changeBookInventory(bookid.get(i), -bookcount.get(i), true) == -1) {
-//                    /* 将其他书籍库存加回来 */
-//                    for (Integer j = i; j >= 0; j--) {
-//                        bookService.changeBookInventory(bookid.get(j), bookcount.get(j), true);
-//                    };
-//                    return new ResponseEntity<>(-1, HttpStatus.NOT_ACCEPTABLE);
-//                };
-//            };
-//            for (Integer i = 0; i < len; i++) {
-//                userService.changeBookCount(userid, bookid.get(i), -bookcount.get(i), true);
-//            }
-//
-//            Integer ans = orderService.addOrderFromUser(userid, totalprice, receivername, address, bookid, bookcount, bookprice);
-//            return new ResponseEntity<>(ans, HttpStatus.OK);
-//        }
-        return new ResponseEntity<>(1, HttpStatus.OK);
+        return new ResponseEntity<>(OrderConstant.ORDER_INPROCESSING, HttpStatus.OK);
     }
     @GetMapping("getOrders")
     public ResponseEntity<List<Order>> getOrders (String username, String password) {

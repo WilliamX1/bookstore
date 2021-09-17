@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSON;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -38,7 +37,7 @@ public class OrderConsumer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        queueConsumer = new QueueConsumer(OrderConstant.queueName);
+        queueConsumer = new QueueConsumer(OrderConstant.QUEUE_NAME);
         Logger LOG = queueConsumer.getLog();
         MessageConsumer messageConsumer = queueConsumer.getConsumer();
 
@@ -83,14 +82,13 @@ public class OrderConsumer implements CommandLineRunner {
         else {
             Integer userid = user.getId();
             /*计算订单总价*/
-            Integer len = bookid.size();
-            Integer totalprice = 0;
+            int len = bookid.size();
+            int totalprice = 0;
             for (Integer i = 0; i < len; i++) {
                 totalprice += bookcount.get(i) * bookprice.get(i);
             }
 
             for (Integer i = 0; i < len; i++) {
-                System.out.println(bookid.get(i));
                 if (bookService.changeBookInventory(bookid.get(i), -bookcount.get(i), true) == -1) {
                     /* 将其他书籍库存加回来 */
                     for (Integer j = i; j >= 0; j--) {
