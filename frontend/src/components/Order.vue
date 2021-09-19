@@ -205,7 +205,7 @@ export default {
       })
       this.axios({
         method: 'POST',
-        url: 'http://localhost:9090/addOrderFromUser',
+        url: 'http://localhost:9090/order/addOrderFromUser',
         params: {
           username: this.$global.username,
           password: this.$global.password,
@@ -221,7 +221,7 @@ export default {
           this.$message({
             duration: 1000,
             type: 'success',
-            message: '购买成功'
+            message: '正在处理交易'
           })
         }
       }).catch(err => {

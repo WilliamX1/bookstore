@@ -142,7 +142,7 @@ export default {
       } else {
         this.$axios({
           methods: 'GET',
-          url: 'http://localhost:9090/searchBookByBookname',
+          url: 'http://localhost:9090/book/searchBookByBookname',
           params: {
             searchbookstr: searchbookstr
           }

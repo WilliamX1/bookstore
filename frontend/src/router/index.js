@@ -9,6 +9,7 @@ import Order from '../components/Order'
 import Admin from '../components/Admin'
 import HistoryOrders from '../components/HistoryOrders'
 import Statistics from '../components/Statistics'
+import ChatRoom from '../components/ChatRoom'
 
 Vue.use(Router)
 
@@ -63,6 +64,11 @@ export default new Router({
       path: '/Statistics',
       name: 'Statistics',
       component: Statistics
+    },
+    {
+      path: '/ChatRoom',
+      name: 'ChatRoom',
+      component: ChatRoom
     }
   ]
 })

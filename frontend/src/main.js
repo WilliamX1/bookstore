@@ -35,7 +35,7 @@ Vue.prototype.getUserconsumptions = function getUserconsumptions (startdate, end
   return new Promise((resolve, reject) => {
     this.$axios({
       method: 'GET',
-      url: 'http://localhost:9090/getUserconsumptions',
+      url: 'http://localhost:9090/user/getUserconsumptions',
       params: {
         startdate: startdate,
         enddate: enddate
@@ -66,7 +66,7 @@ Vue.prototype.getBooksales = function getBooksales (startdate, enddate) {
   return new Promise((resolve, reject) => {
     this.$axios({
       method: 'GET',
-      url: 'http://localhost:9090/getBookSales',
+      url: 'http://localhost:9090/book/getBookSales',
       params: {
         startdate: startdate,
         enddate: enddate
@@ -96,7 +96,7 @@ Vue.prototype.getBooks = function getBooks (username, password) {
   return new Promise((resolve, reject) => {
     this.axios({
       method: 'GET',
-      url: 'http://localhost:9090/getBooks',
+      url: 'http://localhost:9090/book/getBooks',
       params: {
         username: username,
         password: password
@@ -130,7 +130,7 @@ Vue.prototype.getCartItems = function getCartItems (searchbookstr) {
   return new Promise((resolve, reject) => {
     this.axios({
       method: 'GET',
-      url: 'http://localhost:9090/getCartItems',
+      url: 'http://localhost:9090/user/getCartItems',
       params: {
         username: this.$global.username,
         password: this.$global.password,
@@ -165,7 +165,7 @@ Vue.prototype.changeBookCount = function changeBookCount (bookid, bookcount, isa
   return new Promise((resolve, reject) => {
     this.axios({
       method: 'POST',
-      url: isadd === true ? 'http://localhost:9090/changeBookCountAdd' : 'http://localhost:9090/changeBookCountTo',
+      url: isadd === true ? 'http://localhost:9090/book/changeBookCountAdd' : 'http://localhost:9090/book/changeBookCountTo',
       params: {
         username: this.$global.username,
         password: this.$global.password,
@@ -202,7 +202,7 @@ Vue.prototype.changeBookInventory = function changeBookInventory (bookid, change
 
   this.axios({
     method: 'GET',
-    url: 'http://localhost:9090/changeBookInventory',
+    url: 'http://localhost:9090/book/changeBookInventory',
     params: {
       bookid: bookid,
       changeinventory: changeinventory,
@@ -286,7 +286,7 @@ Vue.prototype.getOrders = function getOrders (username, password) {
   return new Promise((resolve, reject) => {
     this.$axios({
       method: 'GET',
-      url: 'http://localhost:9090/getOrders',
+      url: 'http://localhost:9090/order/getOrders',
       params: {
         username: username,
         password: password
@@ -315,7 +315,7 @@ Vue.prototype.getOrderItems = function getOrderItems (username, password) {
   return new Promise((resolve, reject) => {
     this.$axios({
       method: 'GET',
-      url: 'http://localhost:9090/getOrderItems',
+      url: 'http://localhost:9090/order/getOrderItems',
       params: {
         username: username,
         password: password

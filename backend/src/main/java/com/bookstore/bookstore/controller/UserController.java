@@ -22,19 +22,19 @@ public class UserController {
     @Autowired
     WebApplicationContext webApplicationContext;
 
-    @GetMapping("/testUser")
+    @GetMapping("/user/testUser")
     public String test () {
         return "This is a test user!";
     }
 
-    @GetMapping("/verifyUsername")
+    @GetMapping("/user/verifyUsername")
     public ResponseEntity<Integer> verifyUsername(String username) {
         System.out.println(username);
         User user = userService.getUserByUsername(username);
         System.out.println(user);
         return new ResponseEntity<>(user == null ? 1 : 0, HttpStatus.OK);
     }
-    @GetMapping("/checkGotoHome") /*检查是否能进入首页*/
+    @GetMapping("/user/checkGotoHome") /*检查是否能进入首页*/
     public ResponseEntity<User> checkUserRole (@RequestParam (required = false) String username,
                                                  @RequestParam (required = false) String password) {
         User user = userService.getUserByUsernameAndPassword(username, password);
@@ -43,7 +43,7 @@ public class UserController {
         else return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @GetMapping(path = "/getUsers")
+    @GetMapping("/user/getUsers")
     public ResponseEntity<List<User>> getUsers (@RequestParam (required = false) String username,
                                                  @RequestParam (required = false) String password) {
         User user = userService.getUserByUsernameAndPassword(username, password);
@@ -51,39 +51,39 @@ public class UserController {
         if (user != null && "ADMIN".equals(user.getRole())) return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
         else return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
     }
-    @GetMapping(path = "/getUsers/{userId}")
+    @GetMapping("/user/getUsers/{userId}")
     public ResponseEntity<List<User>> getUsers(@PathVariable("userId") Integer userId) {
         UserService userService = webApplicationContext.getBean(UserService.class);
         System.out.println(userService);
         return new ResponseEntity<>(userService.getUsers(userId), HttpStatus.OK);
     }
-    @PostMapping(path = "/editUser")
+    @PostMapping("/user/editUser")
     public ResponseEntity<Integer> editUserState(String username, String password, Integer userid, String changedstate) {
         User user = userService.getUserByUsernameAndPassword(username, password);
         if (user != null && "ADMIN".equals((user.getRole()))) return new ResponseEntity<>(userService.editUserState(userid, changedstate), HttpStatus.OK);
         else return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @PostMapping(path = "/register")
+    @PostMapping("/user/register")
     public ResponseEntity<User> register(String username, String password, String email) {
         if (userService.getUserByUsername(username) != null) return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         else return new ResponseEntity<>(userService.register(username, password, email), HttpStatus.OK);
     }
 
-    @PostMapping("/changeBookCountTo")
+    @PostMapping("/user/changeBookCountTo")
     public ResponseEntity<Integer> changeBookCountTo(String username, String password, Integer bookid, Integer bookcount) {
         User user = userService.getUserByUsernameAndPassword(username, password);
         if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         else return new ResponseEntity<>(userService.changeBookCount(user.getId(), bookid, bookcount, false), HttpStatus.OK);
     }
-    @PostMapping("/changeBookCountAdd")
+    @PostMapping("/user/changeBookCountAdd")
     public ResponseEntity<Integer> changeBookCountAdd(String username, String password, Integer bookid, Integer bookcount) {
         User user = userService.getUserByUsernameAndPassword(username, password);
         if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         else return new ResponseEntity<>(userService.changeBookCount(user.getId(), bookid, bookcount, true), HttpStatus.OK);
     }
 
-    @GetMapping("/getCartItems")
+    @GetMapping("/user/getCartItems")
     public ResponseEntity<List<CartItem>> getCartItems(String username, String password, String searchbookstr) {
         User user = userService.getUserByUsernameAndPassword(username, password);
         System.out.println(searchbookstr);
@@ -92,7 +92,7 @@ public class UserController {
         else return new ResponseEntity<>((userService.getCartItemsByBookname(user.getId(), searchbookstr)), HttpStatus.OK);
     }
 
-    @GetMapping("/getUserconsumptions")
+    @GetMapping("/user/getUserconsumptions")
     public ResponseEntity<String> getUserconsumptions(@RequestParam(required = false)
                                                @DateTimeFormat(pattern="yyyy-MM-dd") Date startdate,
                                                @RequestParam(required = false)

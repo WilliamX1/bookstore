@@ -36,12 +36,12 @@ public class OrderController {
     private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
     private static final String QUEUE_NAME = "order";
 
-    @GetMapping("/testOrder")
+    @GetMapping("/order/testOrder")
     public String test () {
         return "This will reach here";
     }
 
-    @PostMapping("/addOrderFromUser")
+    @PostMapping("/order/addOrderFromUser")
     public ResponseEntity<Integer> addOrderFromUser (@RequestParam String username,
                                                      @RequestParam String password,
                                                      @RequestParam String bookidstr,
@@ -61,21 +61,21 @@ public class OrderController {
         orderProducer.sendMsg(jsonObject);
         return new ResponseEntity<>(OrderConstant.ORDER_INPROCESSING, HttpStatus.OK);
     }
-    @GetMapping("getOrders")
+    @GetMapping("/order/getOrders")
     public ResponseEntity<List<Order>> getOrders (String username, String password) {
         User user = userService.getUserByUsernameAndPassword(username, password);
         if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         else return new ResponseEntity<>(orderService.getOrders("ADMIN".equals(user.getRole()) ? 0 : user.getId()), HttpStatus.OK);
     }
 
-    @GetMapping("getOrdersByBook")
+    @GetMapping("/order/getOrdersByBook")
     public ResponseEntity<List<Order>> getOrdersByBook(String username, String password, String searchbookstr) {
         User user = userService.getUserByUsernameAndPassword(username, password);
         if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         else return new ResponseEntity<>(orderService.getOrdersByBook("ADMIN".equals(user.getRole()) ? 0 : user.getId(), searchbookstr), HttpStatus.OK);
     }
 
-    @GetMapping("getOrdersByDaterange")
+    @GetMapping("/order/getOrdersByDaterange")
     public ResponseEntity<List<Order>> getOrdersByDaterange(String username, String password,
                                                             @DateTimeFormat(pattern="yyyy-MM-dd") Date startdate,
                                                             @DateTimeFormat(pattern="yyyy-MM-dd") Date enddate) {
@@ -84,7 +84,7 @@ public class OrderController {
         else return new ResponseEntity<>(orderService.getOrdersByDaterange("ADMIN".equals(user.getRole()) ? 0 : user.getId(), startdate, enddate), HttpStatus.OK);
     }
 
-    @GetMapping("getBookSales")
+    @GetMapping("/order/getBookSales")
     public ResponseEntity<String> getBookSales(@RequestParam(required = false)
                                                    @DateTimeFormat(pattern="yyyy-MM-dd") Date startdate,
                                                @RequestParam(required = false)

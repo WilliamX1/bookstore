@@ -62,7 +62,7 @@ export default {
       } else {
         this.axios({
           method: 'GET',
-          url: 'http://localhost:9090/checkGotoHome',
+          url: 'http://localhost:9090/user/checkGotoHome',
           params: {
             username: this.inputusername,
             password: this.inputpassword

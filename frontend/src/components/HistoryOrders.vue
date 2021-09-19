@@ -204,7 +204,7 @@ export default {
         this.searchdatarange = []
         this.$axios({
           methods: 'GET',
-          url: 'http://localhost:9090/getOrdersByBook',
+          url: 'http://localhost:9090/order/getOrdersByBook',
           params: {
             username: this.$global.username,
             password: this.$global.password,
@@ -237,7 +237,7 @@ export default {
         this.searchbookstr = ''
         this.$axios({
           method: 'GET',
-          url: 'http://localhost:9090/getOrdersByDaterange',
+          url: 'http://localhost:9090/order/getOrdersByDaterange',
           params: {
             username: this.$global.username,
             password: this.$global.password,
