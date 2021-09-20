@@ -59,8 +59,8 @@
             <msg-box v-for="(item, index) of msgList" :key="index+Math.random()" :uname="item.name" :content="item.msg" :isself="item.isSelf"></msg-box>
           </div>
           <div class="input-area">
-            <textarea class="input" v-model="msg"></textarea>
-            <el-button class="send-btn" @click="sendChatMsg">发送</el-button>
+            <textarea class="input" v-model="msg" @keyup.enter="sendMsg"></textarea>
+            <el-button class="send-btn" @click="sendMsg">发送</el-button>
           </div>
         </div>
       </el-col>
@@ -69,8 +69,8 @@
           <div slot="header" class="clearfix">
             <span style="font-size: 20px; font-family: 楷体; font-weight: bold;">在线成员</span>
           </div>
-          <div v-for="_user in userList" v-bind:key="_user" style="font-size: 14px; font-family: 'Times New Roman';">
-            {{_user}}
+          <div v-for="user in userList" key="user" style="font-size: 14px; font-family: 'Times New Roman';">
+            {{user}}
           </div>
         </el-card>
       </el-col>
@@ -84,7 +84,6 @@ export default {
   name: 'chat',
   data () {
     return {
-      websocket: null,
       content: 'hahhahaha',
       userName: '',
       msg: '',
@@ -95,55 +94,31 @@ export default {
   components: {
     msgBox
   },
-  created () {
-    // 页面刚进入时开启长连接
-    this.initWebSocket()
-  },
-  destroyed: function () {
-    // 页面销毁时关闭长连接
-    this.websocketclose()
-  },
   mounted () {
 
   },
+  sockets: {
+    connect: function () {
+      console.log('socket connected')
+    },
+    message: function (data) {
+      console.log(data)
+      // this.msgList.push(`${data.name}说:${data.msg}`)
+      this.msgList.push({
+        name: data.name === this.userName ? '我' : data.name,
+        msg: data.msg,
+        isSelf: data.name === this.userName
+      })
+    }
+  },
   methods: {
-    sendJoinMsg () {
-      let data = {'type': 'join', 'name': this.$global.username}
-      console.log('Join message', data)
-      this.websocketsend(JSON.stringify(data))
-    },
-    sendChatMsg () {
-      let data = {'type': 'chat', 'name': this.$global.username, 'target': 'all', 'message': this.msg}
-      console.log('Chat message', data)
-      this.websocketsend(JSON.stringify(data))
-    },
-    initWebSocket () { // 初始化weosocket
-      const wsuri = 'ws://localhost:9090/' + 'websocketbot'// ws地址
-      this.websocket = new WebSocket(wsuri)
-      this.websocket.onopen = this.websocketonopen
-
-      this.websocket.onerror = this.websocketonerror
-
-      this.websocket.onmessage = this.websocketonmessage
-      this.websocket.onclose = this.websocketclose
-    },
-
-    websocketonopen () {
-      console.log('WebSocket 连接成功')
-      this.sendJoinMsg()
-    },
-    websocketonerror (e) { // 错误
-      console.log('WebSocket 连接发生错误')
-    },
-    websocketonmessage (e) { // 数据接收
-      // 接收数据
-      console.log(e)
-    },
-    websocketsend (data) { // 数据发送
-      this.websocket.send(data)
-    },
-    websocketclose (e) { // 关闭
-      console.log('connection closed (' + e.code + ')')
+    sendMsg: function () {
+      const data = {
+        name: this.userName,
+        msg: this.msg
+      }
+      this.$socket.emit('message', data)
+      this.msg = ''
     }
   }
 }

@@ -26,7 +26,9 @@
             <el-menu-item index="4">
               <router-link to='/Login'>登录</router-link>
             </el-menu-item>
-            <el-menu-item></el-menu-item>
+            <el-menu-item>
+              <router-link to="/ChatRoom">聊天室</router-link>
+            </el-menu-item>
             <el-menu-item></el-menu-item>
             <el-menu-item></el-menu-item>
             <el-menu-item></el-menu-item>

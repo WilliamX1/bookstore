@@ -243,7 +243,7 @@ Vue.prototype.getUsers = function getUsers () {
   return new Promise((resolve, reject) => {
     this.$axios({
       method: 'GET',
-      url: 'http://localhost:9090/getUsers',
+      url: 'http://localhost:9090/user/getUsers',
       params: {
         username: this.$global.username,
         password: this.$global.password
