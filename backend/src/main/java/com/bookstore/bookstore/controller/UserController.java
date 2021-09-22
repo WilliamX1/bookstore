@@ -37,6 +37,8 @@ public class UserController {
     @GetMapping("/user/checkGotoHome") /*检查是否能进入首页*/
     public ResponseEntity<User> checkUserRole (@RequestParam (required = false) String username,
                                                  @RequestParam (required = false) String password) {
+        UserService userService = webApplicationContext.getBean(UserService.class);
+        System.out.println(userService);
         User user = userService.getUserByUsernameAndPassword(username, password);
         if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         else if ("Normal".equals(user.getState())) return new ResponseEntity<>(user, HttpStatus.OK);
