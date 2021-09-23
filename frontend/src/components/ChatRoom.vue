@@ -56,7 +56,7 @@
         <div class="wrapper">
           <h3 style="font-size: 26px; font-family: 楷体; font-weight: bold; margin-bottom: 16px">群聊</h3>
           <div class="message-panel">
-            <msg-box v-for="(item, index) of msgList" :key="index+Math.random()" :uname="item.name" :content="item.msg" :isself="item.isSelf"></msg-box>
+            <msg-box v-for="(item, index) of msgList" :key="index + Math.random()" :uname="item.name" :content="item.msg" :isself="item.isSelf"></msg-box>
           </div>
           <div class="input-area">
             <textarea class="input" v-model="msg"></textarea>
@@ -114,8 +114,13 @@ export default {
     },
     sendChatMsg () {
       let data = {'type': 'chat', 'name': this.$global.username, 'target': 'all', 'message': this.msg}
-      console.log('Chat message', data)
+      console.log('Send: Chat message', data)
       this.websocketsend(JSON.stringify(data))
+    },
+    getChatMsg (e) {
+      let data = {'name': e.name, 'msg': e.message, 'isSelf': e.name.toString() === this.$global.username.toString()}
+      console.log('Get: Chat message', data, e.name, this.$global.username)
+      this.msgList.push(data)
     },
     initWebSocket () { // 初始化weosocket
       const wsuri = 'ws://localhost:9090/' + 'websocketbot'// ws地址
@@ -137,7 +142,10 @@ export default {
     },
     websocketonmessage (e) { // 数据接收
       // 接收数据
-      console.log(e)
+      let data = JSON.parse(e.data)
+      console.log('OnMessage: ', e)
+      console.log(data)
+      if (data.type === 'chat') this.getChatMsg(data)
     },
     websocketsend (data) { // 数据发送
       this.websocket.send(data)

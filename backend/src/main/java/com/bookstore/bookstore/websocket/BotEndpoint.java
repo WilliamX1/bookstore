@@ -57,7 +57,7 @@ public class BotEndpoint {
             session.getUserProperties().put("target", chatMessage.getTarget());
             session.getUserProperties().put("message", chatMessage.getMessage());
             logger.log(Level.INFO, "Received: {0}", chatMessage.toString());
-            if (chatMessage.getMessage().equals("all"))
+            if (chatMessage.getTarget().equals("all"))
                 sendAll(session, new ChatMessage(chatMessage.getName(), chatMessage.getTarget(), chatMessage.getMessage()));
         }
     }
