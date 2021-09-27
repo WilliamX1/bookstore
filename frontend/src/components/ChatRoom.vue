@@ -89,7 +89,7 @@ export default {
       userName: '',
       msg: '',
       msgList: [],
-      userList: ['青铜葵花', 'WilliamX1']
+      userList: []
     }
   },
   components: {
@@ -109,18 +109,25 @@ export default {
   methods: {
     sendJoinMsg () {
       let data = {'type': 'join', 'name': this.$global.username}
-      console.log('Join message', data)
+      console.log('Send: Join message', data)
       this.websocketsend(JSON.stringify(data))
     },
     sendChatMsg () {
+      if (this.msg === '') return
       let data = {'type': 'chat', 'name': this.$global.username, 'target': 'all', 'message': this.msg}
       console.log('Send: Chat message', data)
       this.websocketsend(JSON.stringify(data))
+      this.msg = ''
     },
     getChatMsg (e) {
       let data = {'name': e.name, 'msg': e.message, 'isSelf': e.name.toString() === this.$global.username.toString()}
-      console.log('Get: Chat message', data, e.name, this.$global.username)
+      console.log('Get: Chat message', data)
       this.msgList.push(data)
+    },
+    getUsersMsg (e) {
+      let data = e.userlist
+      console.log('Get: Users message', data)
+      this.userList = data
     },
     initWebSocket () { // 初始化weosocket
       const wsuri = 'ws://localhost:9090/' + 'websocketbot'// ws地址
@@ -142,10 +149,10 @@ export default {
     },
     websocketonmessage (e) { // 数据接收
       // 接收数据
-      let data = JSON.parse(e.data)
       console.log('OnMessage: ', e)
-      console.log(data)
+      let data = JSON.parse(e.data)
       if (data.type === 'chat') this.getChatMsg(data)
+      else if (data.type === 'users') this.getUsersMsg(data)
     },
     websocketsend (data) { // 数据发送
       this.websocket.send(data)

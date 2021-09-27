@@ -165,7 +165,7 @@ Vue.prototype.changeBookCount = function changeBookCount (bookid, bookcount, isa
   return new Promise((resolve, reject) => {
     this.axios({
       method: 'POST',
-      url: isadd === true ? 'http://localhost:9090/book/changeBookCountAdd' : 'http://localhost:9090/book/changeBookCountTo',
+      url: isadd === true ? 'http://localhost:9090/user/changeBookCountAdd' : 'http://localhost:9090/user/changeBookCountTo',
       params: {
         username: this.$global.username,
         password: this.$global.password,

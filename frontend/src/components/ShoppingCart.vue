@@ -65,7 +65,7 @@
                 <h3 style="margin-top: 20%;">¥ {{item.book.price}}</h3>
               </el-col>
               <el-col :span="4">
-                <el-input-number style="margin-top: 10%;" size="small" v-model="item.bookcount" :min="1" :max="10"
+                <el-input-number style="margin-top: 10%;" size="small" v-model="item.bookcount" :min="1"
                                  label="描述文字" @change="_changeBookCount(item.book.id, item.bookcount)"></el-input-number>
               </el-col>
               <el-col :span="3">
@@ -175,7 +175,9 @@ export default {
 
     /* 获取图书数量信息 */
     this.getCartItems('').then((responsedata) => {
-      this.activecartitems = responsedata
+      responsedata.forEach((ele) => {
+        if (ele.bookcount > 0) this.activecartitems.push(ele)
+      })
     })
   }
 }

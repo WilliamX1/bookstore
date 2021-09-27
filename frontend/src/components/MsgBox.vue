@@ -1,5 +1,5 @@
 <template>
-  <div class="msg-wrapper" v-bind:class="{ self: isself }">
+  <div class="msg-wrapper">
     <span class="uname">{{uname}}</span>
     <span>：</span>
     <div class="content">{{content}}</div>
