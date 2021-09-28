@@ -2,7 +2,8 @@
 #### id: 519021910861
 #### name: 徐惠东
 #### [项目 GitHub 网址](https://github.com/WilliamX1/bookstore.git/)
-#### [项目源代码](./src)
+#### [项目后端源代码](./backend_src)
+#### [项目前端源代码](./frontend_src)
 ------
 <font color="#dd0000"> 以下是 pdf-03 内容 </font>
 

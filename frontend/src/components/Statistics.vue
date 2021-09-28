@@ -15,12 +15,12 @@
               <router-link to='/Home'>首页</router-link>
             </el-menu-item>
             <el-menu-item index="2">
-              <router-link v-if="this.$global.role === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/Statistics">销量统计</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/Statistics">销量统计</router-link>
             </el-menu-item>
             <el-menu-item index="3">
-              <router-link v-if="this.$global.role === 'USER'" to="/HistoryOrders">我的订单</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to="/HistoryOrders">我的订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
             </el-menu-item>
             <!--为了挤占空间使得搜索框至最右边-->
             <el-menu-item index="4">
@@ -147,18 +147,9 @@
 export default {
   name: 'Statistics.vue',
   created () {
-    this.$global.username = this.$cookie.get('username')
-    this.$global.password = this.$cookie.get('password')
-    this.$global.role = this.$cookie.get('role')
-    this.getBooks(this.$global.username, this.$global.password).then(responsedate => {
-      this.$global.books = responsedate
-      this.$forceUpdate()
-    }).finally(() => {
-      this._getBooksales().then((responsedata) => {
-        this.bookSales = responsedata
-      })
+    this._getBooksales().then((responsedata) => {
+      this.bookSales = responsedata
     })
-
     this._getUserconsumptions()
   },
   data () {
@@ -193,22 +184,13 @@ export default {
       })
     },
     __getBooksales__ () {
-      this.$global.username = this.$cookie.get('username')
-      this.$global.password = this.$cookie.get('password')
-      this.$global.role = this.$cookie.get('role')
-      this.getBooks(this.$global.username, this.$global.password).then(responsedate => {
-        this.$global.books = responsedate
-        this.$forceUpdate()
-      }).finally(() => {
-        this._getBooksales().then((responsedata) => {
-          this.bookSales = responsedata
-        })
+      this._getBooksales().then((responsedata) => {
+        this.bookSales = responsedata
       })
     },
     _getUserconsumptions () {
       this.getUserconsumptions(this.userdate[0], this.userdate[1]).then((responsedata) => {
         this.userSales = responsedata
-        console.log(this.userSales)
       })
     }
   }

@@ -120,17 +120,15 @@ export default {
                 email: this.ruleForm.email
               }
             }).then(response => {
-              console.log(response)
               this.$message({
                 message: '恭喜你，注册成功',
                 type: 'success'
               })
-              this.$global.username = this.ruleForm.userName
-              this.$global.password = this.ruleForm.pass
+              this.$cookie.set('username', this.ruleForm.userName)
+              this.$cookie.set('password', this.ruleForm.pass)
               // 跳转
               this.$router.push('Login')
             }).catch(error => {
-              console.log(error)
               if (error.response.status === 406) {
                 this.$message({
                   duration: 1000,
@@ -162,7 +160,6 @@ export default {
           username: userName
         }
       }).then(response => {
-        console.log(response)
         if (response.data === 1) {
           this.$message({
             duration: 3000,

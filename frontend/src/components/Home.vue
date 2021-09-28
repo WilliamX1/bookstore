@@ -15,12 +15,12 @@
               <router-link to='/Home'>首页</router-link>
             </el-menu-item>
             <el-menu-item index="2">
-              <router-link v-if="this.$global.role === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/Statistics">销量统计</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/Statistics">销量统计</router-link>
             </el-menu-item>
             <el-menu-item index="3">
-              <router-link v-if="this.$global.role === 'USER'" to="/HistoryOrders">我的订单</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to="/HistoryOrders">我的订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
             </el-menu-item>
             <!--为了挤占空间使得搜索框至最右边-->
             <el-menu-item index="4">
@@ -50,7 +50,7 @@
       </el-row>
     </header>
     <el-carousel :interval="4000" type="card" height="400px">
-      <el-carousel-item v-for="book in this.$global.books" :key="book">
+      <el-carousel-item v-for="book in this.activebooks" :key="book">
         <el-image :src="require('../assets/books/' + book.image)" style="height: 100%" @click="_route_to_book_details(book.id)"></el-image>
       </el-carousel-item>
     </el-carousel>
@@ -73,11 +73,11 @@
                   加入购物车<i class="el-icon-shopping-bag-1 el-icon--right"></i></el-button>
                 <el-button v-else size="mini" round="true" plain="true" @click="add_to_shopping_cart(book.id, 1)">
                   加入购物车<i class="el-icon-shopping-bag-1 el-icon--right"></i></el-button>
-              <router-link to="/Order">
+              <router-link :to="{name:'Order'}">
                 <el-button v-if="isAdmin" size="mini" round="true" plain="true" disabled>
                   <i class="el-icon-money el-icon--right"></i>立即购买
                 </el-button>
-                <el-button v-else size="mini" round="true" plain="true">
+                <el-button v-else size="mini" round="true" plain="true" @click="saveActiveCartItems(book.id)">
                   <i class="el-icon-money el-icon--right"></i>立即购买
                 </el-button>
               </router-link>
@@ -119,18 +119,17 @@ export default {
     }
   },
   created () {
-    this.$global.username = this.$cookie.get('username')
-    this.$global.password = this.$cookie.get('password')
-    this.$global.role = this.$cookie.get('role')
-    this.isAdmin = this.$global.role === 'ADMIN'
-    this.getBooks(this.$global.username, this.$global.password).then(() => {
-      this.pagetotalcount = 1 + Math.floor((this.$global.books.length - 1) / this.pagesize)
+    this.isAdmin = this.$cookie.get('role') === 'ADMIN'
+    this.getBooks(this.$cookie.get('username'), this.$cookie.get('password')).then(() => {
+      this.pagetotalcount = 1 + Math.floor((JSON.parse(localStorage.getItem('books')).length - 1) / this.pagesize)
       let startidx = (this.curpageidx - 1) * this.pagesize
-      this.activebooks = this.$global.books.slice(startidx, startidx + this.pagesize)
-      this.$forceUpdate()
+      this.activebooks = JSON.parse(localStorage.getItem('books')).slice(startidx, startidx + this.pagesize)
     })
   },
   methods: {
+    saveActiveCartItems (bookid) {
+      localStorage.setItem('activecartitems', JSON.stringify([{'bookcount': 1, 'book': this.bookid_to_book(bookid)}]))
+    },
     _route_to_book_details (bookid) {
       this.routeToBookDetails(bookid)
     },
@@ -140,7 +139,7 @@ export default {
     /* 根据书名模糊搜索 */
     searchBook (searchbookstr) {
       if (searchbookstr === '') {
-        this.activebooks = this.$global.books
+        this.activebooks = JSON.parse(localStorage.getItem('books'))
       } else {
         this.$axios({
           methods: 'GET',
@@ -158,9 +157,8 @@ export default {
     /* 更换页面 */
     changePage (val) {
       this.curpageidx = val
-      console.log(this.curpageidx)
       let startidx = (this.curpageidx - 1) * this.pagesize
-      this.activebooks = this.$global.books.slice(startidx, startidx + this.pagesize)
+      this.activebooks = JSON.parse(localStorage.getItem('books')).slice(startidx, startidx + this.pagesize)
       this.$forceUpdate()
     }
   }

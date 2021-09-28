@@ -15,12 +15,12 @@
               <router-link to='/Home'>首页</router-link>
             </el-menu-item>
             <el-menu-item index="2">
-              <router-link v-if="this.$global.role === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/Statistics">销量统计</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/Statistics">销量统计</router-link>
             </el-menu-item>
             <el-menu-item index="3">
-              <router-link v-if="this.$global.role === 'USER'" to="/HistoryOrders">我的订单</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to="/HistoryOrders">我的订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
             </el-menu-item>
             <!--为了挤占空间使得搜索框至最右边-->
             <el-menu-item index="4">
@@ -108,19 +108,19 @@ export default {
   },
   methods: {
     sendJoinMsg () {
-      let data = {'type': 'join', 'name': this.$global.username}
+      let data = {'type': 'join', 'name': this.$cookie.get('username')}
       console.log('Send: Join message', data)
       this.websocketsend(JSON.stringify(data))
     },
     sendChatMsg () {
       if (this.msg === '') return
-      let data = {'type': 'chat', 'name': this.$global.username, 'target': 'all', 'message': this.msg}
+      let data = {'type': 'chat', 'name': this.$cookie.get('username'), 'target': 'all', 'message': this.msg}
       console.log('Send: Chat message', data)
       this.websocketsend(JSON.stringify(data))
       this.msg = ''
     },
     getChatMsg (e) {
-      let data = {'name': e.name, 'msg': e.message, 'isSelf': e.name.toString() === this.$global.username.toString()}
+      let data = {'name': e.name, 'msg': e.message, 'isSelf': e.name.toString() === this.$cookie.get('username').toString()}
       console.log('Get: Chat message', data)
       this.msgList.push(data)
     },

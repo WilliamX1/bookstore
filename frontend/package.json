@@ -16,10 +16,10 @@
   "dependencies": {
     "axios": "^0.21.1",
     "element-ui": "^2.15.1",
+    "js-cookie": "^3.0.1",
     "view-design": "^4.5.0",
     "vue": "^2.5.2",
     "vue-axios": "^3.2.4",
-    "vue-cookie": "^1.1.4",
     "vue-resource": "^1.5.2",
     "vue-router": "^3.0.1",
     "vuetify": "^2.4.7",

@@ -15,12 +15,12 @@
               <router-link to='/Home'>首页</router-link>
             </el-menu-item>
             <el-menu-item index="2">
-              <router-link v-if="this.$global.role === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/Statistics">销量统计</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/Statistics">销量统计</router-link>
             </el-menu-item>
             <el-menu-item index="3">
-              <router-link v-if="this.$global.role === 'USER'" to="/HistoryOrders">我的订单</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to="/HistoryOrders">我的订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
             </el-menu-item>
             <!--为了挤占空间使得搜索框至最右边-->
             <el-menu-item index="4">
@@ -209,8 +209,8 @@ export default {
         method: 'POST',
         url: 'http://localhost:9090/order/addOrderFromUser',
         params: {
-          username: this.$global.username,
-          password: this.$global.password,
+          username: this.$cookie.get('username'),
+          password: this.$cookie.get('password'),
           bookidstr: JSON.stringify(bookid),
           bookcountstr: JSON.stringify(bookcount),
           bookpricestr: JSON.stringify(bookprice),
@@ -218,7 +218,6 @@ export default {
           address: '上海市闵行区东川路800号'
         }
       }).then(response => {
-        console.log(response)
         if (response.status === 200) {
           this.$message({
             duration: 1000,
@@ -227,7 +226,6 @@ export default {
           })
         }
       }).catch(err => {
-        console.log(err)
         if (err.response.status === 406) {
           this.$message({
             duration: 1000,
@@ -236,22 +234,16 @@ export default {
           })
         }
       })
-      this.getBooks(this.$global.username, this.$global.password)
+      this.getBooks(this.$cookie.get('username'), this.$cookie.get('password'))
     }
   },
   created () {
-    this.$global.username = this.$cookie.get('username')
-    this.$global.password = this.$cookie.get('password')
-    this.getBooks(this.$global.username, this.$global.password)
+    this.getBooks(this.$cookie.get('username'), this.$cookie.get('password'))
 
     /* 获取图书数量信息 */
-    this.getCartItems('').then((responsedata) => {
-      this.activeitems = responsedata
-      console.log(responsedata)
-    }).finally(() => {
-      this.activeitems.forEach((cartItem) => {
-        this.payment += cartItem.bookcount * cartItem.book.price
-      })
+    this.activeitems = JSON.parse(localStorage.getItem('activecartitems'))
+    this.activeitems.forEach((cartItem) => {
+      this.payment += cartItem.bookcount * cartItem.book.price
     })
   }
 }

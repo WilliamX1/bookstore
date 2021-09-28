@@ -5,7 +5,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuex from 'vuex'
-import cookie from 'vue-cookie'
+import cookie from 'js-cookie'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -15,7 +15,6 @@ import 'view-design/dist/styles/iview.css'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import Global from './components/Global'
 
 Vue.use(VueAxios, axios)
 Vue.use(ElementUI)
@@ -27,8 +26,8 @@ Vue.prototype.$axios = axios
 axios.defaults.baseURL = '/api'
 Vue.config.productionTip = false
 
-/* 将全局变量挂在到global上 */
-Vue.prototype.$global = Global
+/* 将全局变量挂在到 cookie 上 */
+Vue.prototype.$cookie = cookie
 
 /* 获取某一阶段用户消费情况 */
 Vue.prototype.getUserconsumptions = function getUserconsumptions (startdate, enddate) {
@@ -41,7 +40,6 @@ Vue.prototype.getUserconsumptions = function getUserconsumptions (startdate, end
         enddate: enddate
       }
     }).then(response => {
-      console.log(response.data)
       let datas = JSON.parse(JSON.stringify(response.data))
       /* 将data转换为数组对象 */
       let userconsumptions = []
@@ -52,10 +50,8 @@ Vue.prototype.getUserconsumptions = function getUserconsumptions (startdate, end
         }
         userconsumptions.push(userconsumption)
       }
-      console.log('userconsumptions', userconsumptions)
       resolve(userconsumptions)
     }).catch(error => {
-      console.log(error)
       reject(error)
     })
   })
@@ -66,13 +62,12 @@ Vue.prototype.getBooksales = function getBooksales (startdate, enddate) {
   return new Promise((resolve, reject) => {
     this.$axios({
       method: 'GET',
-      url: 'http://localhost:9090/book/getBookSales',
+      url: 'http://localhost:9090/order/getBookSales',
       params: {
         startdate: startdate,
         enddate: enddate
       }
     }).then(response => {
-      console.log(response.data)
       let datas = JSON.parse(JSON.stringify(response.data))
       /* 将data转换为数组对象 */
       let bookSales = []
@@ -83,10 +78,8 @@ Vue.prototype.getBooksales = function getBooksales (startdate, enddate) {
         }
         bookSales.push(booksale)
       }
-      console.log(bookSales)
       resolve(bookSales)
     }).catch(error => {
-      console.log(error)
       reject(error)
     })
   })
@@ -109,11 +102,10 @@ Vue.prototype.getBooks = function getBooks (username, password) {
           message: '获取图书信息成功',
           type: 'success'
         })
-        this.$global.books = response.data
+        localStorage.setItem('books', JSON.stringify(response.data))
         resolve(response.data)
       }
     }).catch(error => {
-      console.log(error)
       this.$message({
         duration: 1000,
         title: '提示信息',
@@ -132,12 +124,11 @@ Vue.prototype.getCartItems = function getCartItems (searchbookstr) {
       method: 'GET',
       url: 'http://localhost:9090/user/getCartItems',
       params: {
-        username: this.$global.username,
-        password: this.$global.password,
+        username: cookie.get('username'),
+        password: cookie.get('password'),
         searchbookstr: searchbookstr
       }
     }).then(response => {
-      console.log(response)
       if (response.status === 200) {
         this.$message({
           duration: 1000,
@@ -145,10 +136,10 @@ Vue.prototype.getCartItems = function getCartItems (searchbookstr) {
           message: '获取购物车图书数量成功',
           type: 'success'
         })
+        localStorage.setItem('carts', JSON.stringify(response.data))
         resolve(response.data)
       }
     }).catch(error => {
-      console.log(error)
       this.$message({
         duration: 1000,
         title: '提示信息',
@@ -167,13 +158,12 @@ Vue.prototype.changeBookCount = function changeBookCount (bookid, bookcount, isa
       method: 'POST',
       url: isadd === true ? 'http://localhost:9090/user/changeBookCountAdd' : 'http://localhost:9090/user/changeBookCountTo',
       params: {
-        username: this.$global.username,
-        password: this.$global.password,
+        username: cookie.get('username'),
+        password: cookie.get('password'),
         bookid: bookid,
         bookcount: bookcount
       }
     }).then(response => {
-      console.log(response)
       if (response.status === 200) {
         this.$message({
           duration: 1000,
@@ -184,7 +174,6 @@ Vue.prototype.changeBookCount = function changeBookCount (bookid, bookcount, isa
       }
       resolve(response)
     }).catch(error => {
-      console.log(error)
       this.$message({
         duration: 1000,
         title: '提示信息',
@@ -198,7 +187,7 @@ Vue.prototype.changeBookCount = function changeBookCount (bookid, bookcount, isa
 
 /* 更改图书inventory */
 Vue.prototype.changeBookInventory = function changeBookInventory (bookid, changeinventory, isadd) {
-  this.$global.books[this.bookid_to_index(bookid)].inventory -= changeinventory
+  JSON.parse(localStorage.getItem('books'))[this.bookid_to_index(bookid)].inventory -= changeinventory
 
   this.axios({
     method: 'GET',
@@ -209,7 +198,6 @@ Vue.prototype.changeBookInventory = function changeBookInventory (bookid, change
       isadd: isadd
     }
   }).then(response => {
-    console.log(response)
     if (response.status === 200) {
       this.$message({
         duration: 1000,
@@ -245,14 +233,13 @@ Vue.prototype.getUsers = function getUsers () {
       method: 'GET',
       url: 'http://localhost:9090/user/getUsers',
       params: {
-        username: this.$global.username,
-        password: this.$global.password
+        username: cookie.get('username'),
+        password: cookie.get('password')
       }
     }).then(response => {
-      this.$global.users = response.data
+      localStorage.setItem('users', JSON.stringify(response.data))
       resolve(response.data)
     }).catch(error => {
-      console.log(error)
       reject(error)
     })
   })
@@ -260,25 +247,25 @@ Vue.prototype.getUsers = function getUsers () {
 /* 根据bookid获取数组下标index */
 Vue.prototype.bookid_to_index = function bookid_to_index (bookid) {
   let index = -1
-  this.$global.books.forEach(book => {
-    if (book.id === bookid) index = this.$global.books.indexOf(book)
+  JSON.parse(localStorage.getItem('books')).forEach((book, idx) => {
+    if (book.id === bookid) index = idx
   })
   return index
 }
 /* 根据bookid获取globalbooks中book */
 Vue.prototype.bookid_to_book = function bookid_to_book (bookid) {
-  return this.$global.books[this.bookid_to_index(bookid)]
+  return JSON.parse(localStorage.getItem('books'))[this.bookid_to_index(bookid)]
 }
 Vue.prototype.userid_to_index = function userid_to_index (userid) {
   let index = -1
-  this.$global.users.forEach(user => {
-    if (user.id === userid) index = this.$global.users.indexOf(user)
+  JSON.parse(localStorage.getItem('users')).forEach((user, idx) => {
+    if (user.id === userid) index = idx
   })
   return index
 }
 Vue.prototype.userid_to_user = function userid_to_user (userid) {
   let index = this.userid_to_index(userid)
-  if (index !== -1) return this.$global.users[index]
+  if (index !== -1) return JSON.parse(localStorage.getItem('users'))[index]
   else return null
 }
 /* 获取订单信息 */
@@ -292,7 +279,6 @@ Vue.prototype.getOrders = function getOrders (username, password) {
         password: password
       }
     }).then(response => {
-      console.log(response)
       if (response.status === 200) {
         this.$message({
           duration: 1000,
@@ -300,12 +286,10 @@ Vue.prototype.getOrders = function getOrders (username, password) {
           message: '获取历史订单信息成功',
           type: 'success'
         })
-        this.$global.orders = response.data
+        localStorage.setItem('orders', JSON.stringify(response.data))
       }
-      console.log('---------', response)
       resolve(response.data)
     }).catch(error => {
-      console.log(error)
       reject(error)
     })
   })
@@ -328,11 +312,10 @@ Vue.prototype.getOrderItems = function getOrderItems (username, password) {
           message: '获取历史订单信息成功',
           type: 'success'
         })
-        this.$global.orderitems = response.data
+        localStorage.setItem('orderitems', JSON.stringify(response.data))
         resolve(response.data)
       }
     }).catch(error => {
-      console.log(error)
       reject(error)
     })
   })

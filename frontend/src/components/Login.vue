@@ -36,8 +36,8 @@ export default {
   name: 'Login.vue',
   data () {
     return {
-      inputusername: this.$global.username,
-      inputpassword: this.$global.password
+      inputusername: this.$cookie.get('username'),
+      inputpassword: this.$cookie.get('password')
     }
   },
   created () {
@@ -68,29 +68,24 @@ export default {
             password: this.inputpassword
           }
         }).then(response => {
-          console.log(response)
           if (response.status === 200) {
             this.$message({
               title: '提示信息',
               message: '登录成功',
               type: 'success'
             })
-            this.$global.username = response.data.username
-            this.$global.password = response.data.password
-            this.$global.role = response.data.role
             /* 持久化数据存储 */
-            this.$cookie.set('username', this.$global.username, 1)
-            this.$cookie.set('password', this.$global.password, 1)
-            this.$cookie.set('role', this.$global.role, 1)
+            this.$cookie.set('username', response.data.username, 1)
+            this.$cookie.set('password', response.data.password, 1)
+            this.$cookie.set('role', response.data.role, 1)
             /* 获得图书信息 */
-            this.getBooks(this.$global.username, this.$global.password).then((response) => {
+            this.getBooks(this.$cookie.get('username'), this.$cookie.get('password')).then((response) => {
               this.$router.push('Home')
             }).catch(error => {
               console.log(error)
             })
           }
         }).catch(error => {
-          console.log(error)
           if (error.response.status === 404) {
             this.$message({
               duration: 1000,

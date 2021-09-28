@@ -15,12 +15,12 @@
               <router-link to='/Home'>首页</router-link>
             </el-menu-item>
             <el-menu-item index="2">
-              <router-link v-if="this.$global.role === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/Statistics">销量统计</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/Statistics">销量统计</router-link>
             </el-menu-item>
             <el-menu-item index="3">
-              <router-link v-if="this.$global.role === 'USER'" to="/HistoryOrders">我的订单</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to="/HistoryOrders">我的订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
             </el-menu-item>
             <!--为了挤占空间使得搜索框至最右边-->
             <el-menu-item index="4">
@@ -136,18 +136,6 @@
           </el-card>
         </div>
     </el-main>
-    <div class="billBottomBar">
-      <el-row>
-        <el-col :span="2">&nbsp;</el-col>
-        <el-col :span="9">&nbsp;</el-col>
-        <el-col :span="3">
-          <router-link to="/Order">
-            <el-button type="primary">进入结算</el-button>
-          </router-link>
-        </el-col>
-        <el-col :span="4">&nbsp;</el-col>
-      </el-row>
-    </div>
     <!--底部-->
     <el-footer>
       <h2>Copyright © 2021 HuiDong Xu</h2>
@@ -199,7 +187,7 @@ export default {
   methods: {
     searchOrdersByBook (searchbookstr) {
       if (searchbookstr === '') {
-        this.activeorders = this.$global.orders
+        this.activeorders = JSON.parse(localStorage.getItem('orders'))
         this.statisticTotle()
       } else {
         /* 清空日期搜索框 */
@@ -208,16 +196,15 @@ export default {
           methods: 'GET',
           url: 'http://localhost:9090/order/getOrdersByBook',
           params: {
-            username: this.$global.username,
-            password: this.$global.password,
+            username: this.$cookie.get('username'),
+            password: this.$cookie.get('password'),
             searchbookstr: searchbookstr
           }
         }).then(response => {
           let datas = response.data
-          console.log(datas)
           this.activeorders = []
           datas.forEach(data => {
-            this.$global.orders.forEach(order => {
+            JSON.parse(localStorage.getItem('orders')).forEach(order => {
               if (order.id === data.id) {
                 this.activeorders.push(order)
               }
@@ -230,9 +217,8 @@ export default {
       }
     },
     searchOrdersByDaterange () {
-      console.log(this.searchdatarange)
       if (this.searchdatarange[0] === '' || this.searchdatarange[1] === '') {
-        this.activeorders = this.$global.activeorders
+        this.activeorders = JSON.parse(localStorage.getItem('orders'))
         this.statisticTotle()
       } else {
         /* 清空图书名称搜索框 */
@@ -241,17 +227,16 @@ export default {
           method: 'GET',
           url: 'http://localhost:9090/order/getOrdersByDaterange',
           params: {
-            username: this.$global.username,
-            password: this.$global.password,
+            username: this.$cookie.get('username'),
+            password: this.$cookie.get('password'),
             startdate: this.searchdatarange[0],
             enddate: this.searchdatarange[1]
           }
         }).then(response => {
           let datas = response.data
-          console.log(datas)
           this.activeorders = []
           datas.forEach(data => {
-            this.$global.orders.forEach(order => {
+            JSON.parse(localStorage.getItem('orders')).forEach(order => {
               if (order.id === data.id) {
                 this.activeorders.push(order)
               }
@@ -267,7 +252,6 @@ export default {
       this.activebookSales = []
       this.bookcounttotle = 0
       this.bookmoneytotle = 0
-      console.log('(((((', this.activeorders)
       this.activeorders.forEach(activeorder => {
         activeorder.orderItems.forEach(orderItem => {
           this.bookcounttotle += orderItem.bookcount
@@ -298,26 +282,16 @@ export default {
     }
   },
   created () {
-    this.$global.username = this.$cookie.get('username')
-    this.$global.password = this.$cookie.get('password')
-    this.getBooks(this.$global.username, this.$global.password).then(responsedata => {
-      this.$global.books = responsedata
-    }).finally(() => {
-      this.getOrders(this.$global.username, this.$global.password).then(responsedata => {
-        this.$global.orders = this.activeorders = responsedata
-      }).finally(() => {
-        console.log('***************', this.activeorders)
-        this.activeorders.forEach(activeorder => {
-          activeorder.orderItems.forEach(orderItem => {
-            if (typeof (orderItem.book) === 'object') orderItem.book = orderItem.book.id
-            this.$set(orderItem, 'bookimage', this.bookid_to_book(orderItem.book).image)
-            this.$set(orderItem, 'introduction', this.bookid_to_book(orderItem.book).introduction)
-          })
+    this.getOrders(this.$cookie.get('username'), this.$cookie.get('password')).then(responsedata => {
+      this.activeorders = responsedata
+      this.activeorders.forEach(activeorder => {
+        activeorder.orderItems.forEach(orderItem => {
+          if (typeof (orderItem.book) === 'object') orderItem.book = orderItem.book.id
+          this.$set(orderItem, 'bookimage', this.bookid_to_book(orderItem.book).image)
+          this.$set(orderItem, 'introduction', this.bookid_to_book(orderItem.book).introduction)
         })
-        this.statisticTotle()
-        this.$forceUpdate()
-        console.log('***********', this.activebookSales)
       })
+      this.statisticTotle()
     })
   },
   filters: {

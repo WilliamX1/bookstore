@@ -15,12 +15,12 @@
               <router-link to='/Home'>首页</router-link>
             </el-menu-item>
             <el-menu-item index="2">
-              <router-link v-if="this.$global.role === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/Statistics">销量统计</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/Statistics">销量统计</router-link>
             </el-menu-item>
             <el-menu-item index="3">
-              <router-link v-if="this.$global.role === 'USER'" to="/HistoryOrders">我的订单</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to="/HistoryOrders">我的订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
             </el-menu-item>
             <!--为了挤占空间使得搜索框至最右边-->
             <el-menu-item index="4">
@@ -80,14 +80,16 @@
             <br>
             <el-input-number v-model="buycount" controls-position="right" :min="1" :max="this.book.inventory"
                              size="small"></el-input-number>
-            <el-button size="medium" round="true" plain="true" @click="add_to_shopping_cart">
-              加入购物车
-              <i class="el-icon-shopping-bag-1 el-icon--right"></i>
-            </el-button>
-            <router-link to="/Order">
-              <el-button size="medium" round="true" plain="true">
-                <i class="el-icon-money el-icon--right"></i>
-                立即购买
+            <el-button v-if="this.$cookie.get('role') === 'ADMIN'" size="mini" round="true" plain="true" @click="add_to_shopping_cart(book.id, 1)" disabled="">
+              加入购物车<i class="el-icon-shopping-bag-1 el-icon--right"></i></el-button>
+            <el-button v-else size="mini" round="true" plain="true" @click="add_to_shopping_cart(book.id, 1)">
+              加入购物车<i class="el-icon-shopping-bag-1 el-icon--right"></i></el-button>
+            <router-link :to="{name:'Order'}">
+              <el-button v-if="this.$cookie.get('role') === 'ADMIN'" size="mini" round="true" plain="true" disabled>
+                <i class="el-icon-money el-icon--right"></i>立即购买
+              </el-button>
+              <el-button v-else size="mini" round="true" plain="true" @click="saveActiveCartItems(book.id)">
+                <i class="el-icon-money el-icon--right"></i>立即购买
               </el-button>
             </router-link>
           </el-card>
@@ -123,11 +125,14 @@ export default {
   },
   created () {
     this.bookid = parseInt(this.$route.query.bookid)
-    this.book = this.$global.books.find((book) => {
+    this.book = JSON.parse(localStorage.getItem('books')).find((book) => {
       return this.bookid === book.id
     })
   },
   methods: {
+    saveActiveCartItems () {
+      localStorage.setItem('activecartitems', JSON.stringify([{'bookcount': 1, 'book': this.book}]))
+    },
     add_to_shopping_cart () {
       this.changeBookCount(this.bookid, this.buycount, true)
       this.buycount = 1

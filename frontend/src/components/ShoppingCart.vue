@@ -15,12 +15,12 @@
               <router-link to='/Home'>首页</router-link>
             </el-menu-item>
             <el-menu-item index="2">
-              <router-link v-if="this.$global.role === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/Statistics">销量统计</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/Statistics">销量统计</router-link>
             </el-menu-item>
             <el-menu-item index="3">
-              <router-link v-if="this.$global.role === 'USER'" to="/HistoryOrders">我的订单</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to="/HistoryOrders">我的订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
             </el-menu-item>
             <!--为了挤占空间使得搜索框至最右边-->
             <el-menu-item index="4">
@@ -55,6 +55,7 @@
         <div v-for="item in activecartitems" v-bind:key="item.id">
           <div class="cartView">
             <el-row :gutter="25">
+              <el-col :span="1"><el-checkbox v-model="item.isChecked"></el-checkbox></el-col>
               <el-col :span="3">
                 <el-image :src="require('../assets/books/' + item.book.image)" style="width: 90px; height: 120px;"></el-image>
               </el-col>
@@ -84,7 +85,7 @@
               </el-col>
             </el-row>
           </div>
-          <divider></divider>
+        <divider></divider>
         </div>
       </ul>
     </el-main>
@@ -93,8 +94,8 @@
         <el-col :span="2">&nbsp;</el-col>
         <el-col :span="9">&nbsp;</el-col>
         <el-col :span="3">
-          <router-link to="/Order">
-            <el-button type="primary">进入结算</el-button>
+          <router-link :to="{path:'/Order'}">
+            <el-button @click="saveActiveCartItems" type="primary">进入结算</el-button>
           </router-link>
         </el-col>
         <el-col :span="4">&nbsp;</el-col>
@@ -116,10 +117,16 @@ export default {
   data () {
     return {
       activecartitems: [],
-      searchbookstr: ''
+      searchbookstr: '',
+      checklist: [1, 2, 3, 4, 5]
     }
   },
   methods: {
+    saveActiveCartItems () {
+      localStorage.setItem('activecartitems', JSON.stringify(this.activecartitems.filter(item => {
+        return item.isChecked === true
+      })))
+    },
     /* 删除某本书全部数量 */
     deleteBookFromCart (bookid) {
       this.$confirm('删除此书籍, 是否继续', '提示', {
@@ -153,14 +160,11 @@ export default {
     searchCartByBook (searchbookstr) {
       /* 获取图书数量信息 */
       let cartItems = []
-      console.log(this.searchbookstr)
       this.getCartItems(this.searchbookstr).then((responsedata) => {
         cartItems = responsedata
       }).finally(() => {
-        this.$global.carts = cartItems
         this.activecartitems = []
         cartItems.forEach((cartItem) => {
-          console.log(this.bookid_to_book(cartItem.bookid))
           let book = this.bookid_to_book(cartItem.bookid)
           book.count = cartItem.bookcount
           this.activecartitems.push(book)
@@ -169,13 +173,12 @@ export default {
     }
   },
   created () {
-    this.$global.username = this.$cookie.get('username')
-    this.$global.password = this.$cookie.get('password')
-    this.getBooks(this.$global.username, this.$global.password)
+    this.getBooks(this.$cookie.get('username'), this.$cookie.get('password'))
 
     /* 获取图书数量信息 */
     this.getCartItems('').then((responsedata) => {
       responsedata.forEach((ele) => {
+        ele.isChecked = false
         if (ele.bookcount > 0) this.activecartitems.push(ele)
       })
     })

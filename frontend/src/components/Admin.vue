@@ -1,5 +1,5 @@
 <template xmlns:el-input="http://www.w3.org/1999/html">
-  <div class="Admin" v-if="this.$global.role === 'ADMIN'">
+  <div class="Admin" v-if="this.$cookie.get('role') === 'ADMIN'">
     <!--顶部导航栏-->
     <header class="navigationBar">
       <el-row>
@@ -15,12 +15,12 @@
               <router-link to='/Home'>首页</router-link>
             </el-menu-item>
             <el-menu-item index="2">
-              <router-link v-if="this.$global.role === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/Statistics">销量统计</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to='/ShoppingCart'>我的购物车</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/Statistics">销量统计</router-link>
             </el-menu-item>
             <el-menu-item index="3">
-              <router-link v-if="this.$global.role === 'USER'" to="/HistoryOrders">我的订单</router-link>
-              <router-link v-if="this.$global.role === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'USER'" to="/HistoryOrders">我的订单</router-link>
+              <router-link v-if="this.$cookie.get('role') === 'ADMIN'" to="/HistoryOrders">全部订单</router-link>
             </el-menu-item>
             <!--为了挤占空间使得搜索框至最右边-->
             <el-menu-item index="4">
@@ -300,7 +300,7 @@ export default {
       }
     }
     return {
-      admin_or_user: this.$global.role === 'ADMIN',
+      admin_or_user: this.$cookie.get('role') === 'ADMIN',
       searchbookstr: '',
       activebooks: [],
       dialogTableVisible: false,
@@ -376,8 +376,8 @@ export default {
           method: 'POST',
           url: 'http://localhost:9090/user/editUser',
           params: {
-            username: this.$global.username,
-            password: this.$global.password,
+            username: this.$cookie.get('username'),
+            password: this.$cookie.get('password'),
             userid: row.id,
             changedstate: row.state === 'Normal' ? 'Forbidden' : 'Normal'
           }
@@ -397,7 +397,7 @@ export default {
     /* 根据书名模糊搜索 */
     searchBook () {
       if (this.searchbookstr === '') {
-        this.activebooks = this.$global.books
+        this.activebooks = JSON.parse(localStorage.getItem('books'))
       } else {
         this.$axios({
           methods: 'GET',
@@ -512,22 +512,16 @@ export default {
     }
   },
   created () {
-    this.$global.username = this.$cookie.get('username')
-    this.$global.password = this.$cookie.get('password')
-    this.$global.role = this.$cookie.get('role')
-    this.getBooks(this.$global.username, this.$global.password).then(() => {
-      this.activebooks = this.$global.books
+    this.getBooks(this.$cookie.get('username'), this.$cookie.get('password')).then(() => {
+      this.activebooks = JSON.parse(localStorage.getItem('books'))
       this.activebooks.forEach(book => {
         this.$set(book, 'isEditable', false)
         this.$set(book, 'inputimage', book.image)
       })
-      console.log(this.activebooks)
       this.$forceUpdate()
     })
     this.getUsers().then(responsedata => {
-      this.$global.users = responsedata
-    }).finally(() => {
-      this.activeusers = this.$global.users
+      this.activeusers = responsedata
     })
   }
 }
