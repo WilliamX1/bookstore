@@ -125,6 +125,8 @@ export default {
       let startidx = (this.curpageidx - 1) * this.pagesize
       this.activebooks = JSON.parse(localStorage.getItem('books')).slice(startidx, startidx + this.pagesize)
     })
+    /* 统计首页访问量 */
+    this.apiVisitHistory()
   },
   methods: {
     saveActiveCartItems (bookid) {

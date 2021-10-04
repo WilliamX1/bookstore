@@ -117,6 +117,33 @@ Vue.prototype.getBooks = function getBooks (username, password) {
   })
 }
 
+/* 成功访问首页 */
+Vue.prototype.apiVisitHistory = function apiVisitHistory () {
+  return new Promise((resolve, reject) => {
+    this.axios({
+      method: 'GET',
+      url: 'http://localhost:9090/user/apiVisitHistory'
+    }).then(response => {
+      if (response.status === 200) {
+        this.$message({
+          duration: 1000,
+          title: '提示信息',
+          message: '访问首页成功',
+          type: 'success'
+        })
+        resolve(response.data)
+      }
+    }).catch(error => {
+      this.$message({
+        duration: 1000,
+        title: '提示信息',
+        message: '访问出错',
+        type: 'error'
+      })
+      reject(error)
+    })
+  })
+}
 /* 获取购物车图书信息 */
 Vue.prototype.getCartItems = function getCartItems (searchbookstr) {
   return new Promise((resolve, reject) => {
