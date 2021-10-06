@@ -146,8 +146,87 @@ https://blog.csdn.net/LuQiaoYa/article/details/88233846
 <font color=red> 以下是 pdf-06 内容 </font>
 
 ### 要求
+**增加 Redis 缓存，并将书籍的持久化操作改写为通过缓存来执行 **
+### 设计原理
+#### Redis 简介
+* Redis 是完全开源免费的一个高性能 key-value 非关系型数据库。
+* Redis 支持数据的持久化，且提供 5 种数据结构类型（String、List、Set、Hash、Zset）的存储。
+* Redis 的优势
+1. 性能极高，读速 110000 次 / s，写速 8100 次 / s。
+2. 丰富数据类型支持。
+3. 所有操作都是原子性的。
+4. 支持 publish / subscribe，通知，key 过期等特性。
+#### 缓存
+使用 redis 缓存可以减少数据库压力，特别是在大量数据的情形下，还可以提高访问速度。
+
+### 代码实现
+#### 后端 SpringBoot 代码
+**[BookRepositoryImpl] 书籍相关操作**
+```JAVA
+/* 获取图书信息 */
+public List<Book> getBooks () {
+	List<Book> result = new ArrayList<>();
+	Book book;
+	for (int i = 1; ; i++) /* 主键从 1 开始 */
+	{
+		Object o = redisUtil.get("book-" + i);
+		/* 如果在 redis 缓存在查询不到 */
+		if (o == null) {
+			book = bookDao.findById(i);
+			/* 已经查阅完全部书籍则返回 */
+			if (book == null) break;
+			else redisUtil.set("book-" + i, book);
+		} else book = (Book) o;
+		/* 如果该书没有被删除 */
+		if (book.getState() == 1) result.add(book);
+	}
+	return result;
+}
+/* 修改书籍库存 */
+public Integer changeBookInventory(Integer bookid, Integer changeinventory, Boolean isadd) {
+	...
+	try {
+		/* 现在缓存中查询 */
+		Object o = redisUtil.get("book-" + bookid);
+		if (o == null) book = bookDao.findById(bookid);
+		else book = (Book) o;
+		...
+	}
+	...
+	/* 更新缓存 */
+	redisUtil.set("book-" + bookid, book);
+}
+/* 修改图书信息 */
+public Integer editBookInfo (Book book) {
+	bookDao.save(book);
+	/* 更新 redis 缓存 */
+	redisUtil.set("book-" + book.getId(), book);
+}
+/* 删除图书 */
+public Integer deleteBook (Integer bookid) {
+	...
+	Object o = redisUtil.get("book-" + bookid);
+	if (o == null) book = bookDao.findById(bookid);
+	else book = (Book) o;
+	...
+	/* 更新 redis 缓存 */
+	redisUtil.set("book-" + bookid, book);
+}
+```
+**[RedisUtil] Redis 工具类封装，提供 get 和 set 方法**
+```Java
+/* 借鉴老师所给样例代码中的 RedisUtil 文件内容。 */
+```
+
+### 代码运行结果
+书籍的获取，更新，删除等操作均先通过 Redis 缓存获取，大大加快了访问速度，减小了数据库压力。
+
+### 项目关联文件
+[06-caching.pdf](./06-caching.pdf)
+[BookRepositoryImpl](./BookRepositoryImpl.java)
+[RedisUtil](./RedisUtil.java)
 
 ### 参考
 https://blog.csdn.net/weixin_41134409/article/details/84190423
 https://segmentfault.com/a/1190000025216273
-
+https://xie.infoq.cn/article/c8a917dd5773a3ff1d9b408af
