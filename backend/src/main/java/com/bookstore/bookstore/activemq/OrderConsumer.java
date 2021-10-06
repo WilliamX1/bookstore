@@ -77,7 +77,7 @@ public class OrderConsumer implements CommandLineRunner {
 
     private ResponseEntity<Integer> execute(JSONObject order) throws Exception {
         try {
-            return new ResponseEntity<>(bookService.makeOrder(order), HttpStatus.OK);
+            return new ResponseEntity<>(orderService.makeOrder(order), HttpStatus.OK);
         } catch (Exception e) {
             log.error("" + e);
             return new ResponseEntity<>(-1, HttpStatus.NOT_ACCEPTABLE);

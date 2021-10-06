@@ -1,5 +1,6 @@
 package com.bookstore.bookstore.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bookstore.bookstore.entity.Order;
 import com.bookstore.bookstore.entity.OrderItem;
 import org.springframework.stereotype.Component;
@@ -21,4 +22,6 @@ public interface OrderService {
     List<Order> getOrdersByDaterange(Integer userid, Date startdate, Date enddate);
     /* 统计指定时间范围内各种书籍销量, 以JSON数据格式返回 */
     String getBooksSales(Date startend, Date enddate);
+    /* 处理消息队列中下订单逻辑 */
+    Integer makeOrder(JSONObject order);
 }

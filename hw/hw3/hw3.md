@@ -1,6 +1,6 @@
-# hw2
+# hw3
 #### id: 519021910861
-#### name: xuhuid
+#### name: xuhuidong
 #### [项目 GitHub 网址](https://github.com/WilliamX1/bookstore.git/)
 #### [项目后端源代码](./backend_src)
 #### [项目前端源代码](./frontend_src)
@@ -136,7 +136,18 @@ export default {
 [test.jmx](test.jmx)
 
 ### 参考
+[05-multithreading.pdf](./05-multithreading.pdf)
 https://baike.baidu.com/item/%E8%AE%BF%E9%97%AE%E9%87%8F/392852
 https://blog.csdn.net/qq_43194650/article/details/111682049
 https://www.jianshu.com/p/3d1c79ad68b4
 https://blog.csdn.net/LuQiaoYa/article/details/88233846
+
+------
+<font color=red> 以下是 pdf-06 内容 </font>
+
+### 要求
+
+### 参考
+https://blog.csdn.net/weixin_41134409/article/details/84190423
+https://segmentfault.com/a/1190000025216273
+

@@ -4,6 +4,7 @@ import com.bookstore.bookstore.entity.CartItem;
 import com.bookstore.bookstore.entity.User;
 import com.bookstore.bookstore.repository.UserRepository;
 import com.bookstore.bookstore.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 @Scope("prototype")
 public class UserServiceImpl implements UserService {
     @Autowired

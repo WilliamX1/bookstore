@@ -1,8 +1,13 @@
 package com.bookstore.bookstore.repositoryimpl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.bookstore.bookstore.entity.Book;
 import com.bookstore.bookstore.repository.BookRepository;
 import com.bookstore.bookstore.dao.BookDao;
+import com.bookstore.bookstore.util.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
@@ -10,23 +15,44 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class BookRepositoryImpl implements BookRepository {
     @Autowired
     private BookDao bookDao;
 
-    /*获取图书信息*/
+    @Autowired
+    RedisUtil redisUtil;
+
+    /* 获取图书信息 */
     public List<Book> getBooks () {
-        return bookDao.findByStateEquals(1);
+        List<Book> result = new ArrayList<>();
+        Book book;
+        for (int i = 1; ; i++) {
+            Object o = redisUtil.get("book-" + i);
+            if (o == null) {
+                book = bookDao.findById(i);
+                /* 已经查阅完全部书籍则返回 */
+                if (book == null) break;
+                else redisUtil.set("book-" + i, book);
+            } else book = (Book) o;
+            /* 如果该书没有被删除 */
+            if (book.getState() == 1) result.add(book);
+        }
+        return result;
     }
     /* 修改书籍库存 */
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public Integer changeBookInventory (Integer bookid, Integer changeinventory, Boolean isadd) throws Exception {
         Book book = null;
         try {
-            book = bookDao.findById(bookid);
+            Object o = redisUtil.get("book-" + bookid);
+            /* 如果不在缓存里 */
+            if (o == null) book = bookDao.findById(bookid);
+            else book = (Book) o;
             Assert.notNull(book);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("" + e);
@@ -39,22 +65,34 @@ public class BookRepositoryImpl implements BookRepository {
             throw new RuntimeException("图书数量不够");
         };
         bookDao.save(book);
+        /* 存入缓存中 */
+        redisUtil.set("book-" + bookid, book);
         return 0;
     }
     /* 根据书名查找书籍 */
     public List<Book> getBooksByBookname(String searchbookstr) {
         return bookDao.findByBooknameContaining(searchbookstr);
     };
-    /*修改图书信息*/
+    /* 修改图书信息 */
     public Integer editBookInfo(Book book) {
         bookDao.save(book);
+        /* 存入 redis 缓存中 */
+        redisUtil.set("book-" + book.getId(), book);
         return 0;
     };
-    /*删除图书*/
+    /* 删除图书 */
     public Integer deleteBook(Integer bookid) {
-        Book book = bookDao.findById(bookid);
+        Book book = null;
+        Object o = redisUtil.get("book-" + bookid);
+        if (o == null) book = bookDao.findById(bookid);
+        else book = (Book) o;
+
+        Assert.notNull(book);
+
         book.setState(0);
         bookDao.save(book);
+        /* 存入 redis 缓存中 */
+        redisUtil.set("book-" + bookid, book);
         return 0;
     };
 }

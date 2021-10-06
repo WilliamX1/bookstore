@@ -19,6 +19,4 @@ public interface BookService {
     Integer editBookInfo(Book book);
     /* 删除图书 */
     Integer deleteBook(Integer bookid);
-    /* 处理消息队列中下订单逻辑 */
-    Integer makeOrder(JSONObject order);
 }

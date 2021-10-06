@@ -50,7 +50,6 @@ public class BookController {
     @PostMapping("/book/editBookInfo")
     public ResponseEntity<Integer> editBookInfo(String bookstr) {
         Book book = JSON.parseObject(bookstr, Book.class);
-        System.out.println(book);
         return new ResponseEntity<>(bookService.editBookInfo(book), HttpStatus.OK);
     }
     @PostMapping("/book/deleteBook")
