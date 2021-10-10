@@ -46,7 +46,6 @@ public class BookServiceImpl implements BookService {
         }
     }
     /* 根据书名查找书籍 */
-    /* 由于用户输入查找文字多样，所以此接口不做 cache 缓存 */
     public List<Book> getBooksByBookname(String searchbookstr) {
         return bookRepository.getBooksByBookname(searchbookstr);
     };

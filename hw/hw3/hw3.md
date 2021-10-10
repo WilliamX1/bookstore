@@ -212,6 +212,22 @@ public Integer deleteBook (Integer bookid) {
 	/* 更新 redis 缓存 */
 	redisUtil.set("book-" + bookid, book);
 }
+/* 根据书名查找书籍 */
+public List<Book> getBooksByBookname(String searchbookstr) {
+    /* 先将没有缓存的书籍缓存至 redis */
+    getBooks();
+    List<Book> result = new ArrayList<>();
+    Book book;
+    for (int i = 1; ; i++) {
+        Object o = redisUtil.get("book-" + i);
+        if (o == null) break; /* 查询完所有书籍 */
+        else {
+            book = (Book) o;
+            if (book.getBookname().contains(searchbookstr)) result.add(book);
+        }
+    };
+    return result;
+};
 ```
 **[RedisUtil] Redis 工具类封装，提供 get 和 set 方法**
 ```Java

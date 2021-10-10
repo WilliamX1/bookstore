@@ -71,7 +71,20 @@ public class BookRepositoryImpl implements BookRepository {
     }
     /* 根据书名查找书籍 */
     public List<Book> getBooksByBookname(String searchbookstr) {
-        return bookDao.findByBooknameContaining(searchbookstr);
+        /* 先将没有缓存的书籍缓存至 redis */
+        getBooks();
+        List<Book> result = new ArrayList<>();
+        Book book;
+        for (int i = 1; ; i++) {
+            Object o = redisUtil.get("book-" + i);
+            if (o == null) break; /* 查询完所有书籍 */
+            else {
+                book = (Book) o;
+                if (book.getBookname().contains(searchbookstr)) result.add(book);
+            }
+        };
+        return result;
+//        return bookDao.findByBooknameContaining(searchbookstr);
     };
     /* 修改图书信息 */
     public Integer editBookInfo(Book book) {
