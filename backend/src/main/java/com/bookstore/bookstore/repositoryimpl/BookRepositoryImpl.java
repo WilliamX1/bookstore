@@ -1,9 +1,9 @@
 package com.bookstore.bookstore.repositoryimpl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.bookstore.bookstore.entity.Book;
+import com.bookstore.bookstore.fulltextsearching.ReadWriteFiles;
+import com.bookstore.bookstore.fulltextsearching.FilesPositionConfig;
+import com.bookstore.bookstore.fulltextsearching.SearchFiles;
 import com.bookstore.bookstore.repository.BookRepository;
 import com.bookstore.bookstore.dao.BookDao;
 import com.bookstore.bookstore.util.RedisUtil;
@@ -27,22 +27,33 @@ public class BookRepositoryImpl implements BookRepository {
     @Autowired
     RedisUtil redisUtil;
 
+
     /* 获取图书信息 */
     public List<Book> getBooks () {
         List<Book> result = new ArrayList<>();
-        Book book;
         for (int i = 1; ; i++) {
-            Object o = redisUtil.get("book-" + i);
-            if (o == null) {
-                book = bookDao.findById(i);
-                /* 已经查阅完全部书籍则返回 */
-                if (book == null) break;
-                else redisUtil.set("book-" + i, book);
-            } else book = (Book) o;
+            Book book = getBookById(i);
+            /* 已经查阅完全部书籍则返回 */
+            if (book == null) break;
             /* 如果该书没有被删除 */
             if (book.getState() == 1) result.add(book);
         }
         return result;
+    }
+    /* 根据 book_id 获取某本书信息 */
+    public Book getBookById (Integer bookid) {
+        Book book;
+        Object o = redisUtil.get("book-" + bookid);
+        if (o == null) {
+            book = bookDao.findById(bookid);
+            /* 已经查阅完全部书籍则返回 */
+            if (book == null) return null;
+            else {
+                System.out.println(book);
+                redisUtil.set("book-" + bookid, book);
+            }
+        } else book = (Book) o;
+        return book;
     }
     /* 修改书籍库存 */
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
@@ -89,8 +100,11 @@ public class BookRepositoryImpl implements BookRepository {
     /* 修改图书信息 */
     public Integer editBookInfo(Book book) {
         bookDao.save(book);
+        /* 创建书籍信息 docs 并创建相应索引 */
+        ReadWriteFiles.create_docs_files(book.getId(), book.getIntroduction(), true);
         /* 存入 redis 缓存中 */
         redisUtil.set("book-" + book.getId(), book);
+
         return 0;
     };
     /* 删除图书 */
@@ -107,5 +121,21 @@ public class BookRepositoryImpl implements BookRepository {
         /* 存入 redis 缓存中 */
         redisUtil.set("book-" + bookid, book);
         return 0;
+    };
+    /* 全文搜索书籍 */
+    public List<Book> fulltextSearchBook(String text) {
+        List<Book> bookList = new ArrayList<>();
+        try {
+            String[] args = {"-index", FilesPositionConfig.indexPath, "-query", text};
+            List<Integer> bookidList = SearchFiles.search_interface(args);
+            for (Integer integer : bookidList) {
+                Book book = getBookById(integer);
+                /* 如果该书没有被删除 */
+                if (book != null && book.getState() == 1) bookList.add(book);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bookList;
     };
 }

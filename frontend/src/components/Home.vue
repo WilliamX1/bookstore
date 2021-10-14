@@ -30,15 +30,17 @@
               <router-link to="/ChatRoom">聊天室</router-link>
             </el-menu-item>
             <el-menu-item></el-menu-item>
-            <el-menu-item></el-menu-item>
-            <el-menu-item></el-menu-item>
-            <el-menu-item></el-menu-item>
-            <el-menu-item></el-menu-item>
-            <el-menu-item></el-menu-item>
             <el-menu-item>
               <el-input placeholder="搜索" v-model="searchbookstr" @input="searchBook(searchbookstr)">
                 <el-button slot="append" icon="el-icon-search"></el-button>
               </el-input>
+            </el-menu-item>
+            <el-menu-item>
+              <el-switch
+                v-model="searchtype"
+                active-text="全文搜索"
+                inactive-text="普通搜索">
+              </el-switch>
             </el-menu-item>
             <el-menu-item>
               <router-link to="/Admin">
@@ -115,7 +117,8 @@ export default {
       isAdmin: false,
       pagetotalcount: 0,
       pagesize: 4,
-      curpageidx: 1
+      curpageidx: 1,
+      searchtype: true
     }
   },
   created () {
@@ -128,6 +131,13 @@ export default {
     /* 统计首页访问量 */
     this.apiVisitHistory()
   },
+  mounted () {
+    // 关闭浏览器窗口的时候清空浏览器缓存在localStorage的数据
+    window.onbeforeunload = function (e) {
+      const storage = window.localStorage
+      storage.clear()
+    }
+  },
   methods: {
     saveActiveCartItems (bookid) {
       localStorage.setItem('activecartitems', JSON.stringify([{'bookcount': 1, 'book': this.bookid_to_book(bookid)}]))
@@ -139,13 +149,14 @@ export default {
       this.changeBookCount(bookid, bookcount, true)
     },
     /* 根据书名模糊搜索 */
+    /* 全文搜索 */
     searchBook (searchbookstr) {
       if (searchbookstr === '') {
         this.activebooks = JSON.parse(localStorage.getItem('books'))
       } else {
         this.$axios({
           methods: 'GET',
-          url: 'http://localhost:9090/book/searchBookByBookname',
+          url: this.searchtype === true ? 'http://localhost:9090/book/fulltextSearchBook' : 'http://localhost:9090/book/searchBookByBookname',
           params: {
             searchbookstr: searchbookstr
           }

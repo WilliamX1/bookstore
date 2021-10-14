@@ -57,4 +57,8 @@ public class BookServiceImpl implements BookService {
     public Integer deleteBook(Integer bookid) {
         return bookRepository.deleteBook(bookid);
     }
+    /* 全文搜索书籍 */
+    public List<Book> fulltextSearchBook(String text) {
+        return bookRepository.fulltextSearchBook(text);
+    };
 }

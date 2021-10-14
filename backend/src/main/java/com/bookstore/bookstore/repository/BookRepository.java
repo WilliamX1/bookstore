@@ -18,4 +18,8 @@ public interface BookRepository {
     Integer editBookInfo(Book book);
     /* 删除图书 */
     Integer deleteBook(Integer bookid);
+    /* 全文搜索书籍 */
+    List<Book> fulltextSearchBook(String text);
+    /* 根据 book_id 获取某本书信息 */
+    Book getBookById (Integer bookid);
 }

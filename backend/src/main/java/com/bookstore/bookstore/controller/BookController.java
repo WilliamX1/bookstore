@@ -56,4 +56,8 @@ public class BookController {
     public ResponseEntity<Integer> deleteBook(Integer id) {
         return new ResponseEntity<>(bookService.deleteBook(id), HttpStatus.OK);
     }
+    @GetMapping("/book/fulltextSearchBook")
+    public ResponseEntity<List<Book>> fulltextSearchBook(String searchbookstr) {
+        return new ResponseEntity<>(bookService.fulltextSearchBook(searchbookstr), HttpStatus.OK);
+    }
 }
