@@ -31,11 +31,13 @@
 	序，形成热销榜，以图或表的方式呈现。
 	* 管理员可以统计在指定时间范围内每个用户的累计消费情况，按照购书进行排序，形成消费榜，以图或表的方式呈现。
 	* 顾客可以统计在指定时间范围内自己购买书籍的情况 ，包括每种书购买了多少本，购书总本数和总金额。
+
 ### 技术栈
 **前端**: Vue、WebPack </br>
 **后端**: SpringBoot、Maven </br>
 **数据库**: MySQL、Redis </br>
-**中间件**: Activemq、WebSocket、Lucene </br>
+**中间件**: Activemq、WebSocket、Lucene、SOAP、WSDL </br>
+
 ### 技术亮点
 #### [Activemq](https://github.com/WilliamX1/bookstore/blob/main/hw/hw1/hw1.md)
 使用 Activemq 实现下订单功能消息队列。当用户点击下订单时，后端 Controller 先使用生产者将用户请求转发给消费者，并迅速返回给用户该订单正在执行中。后端消费者将在空闲时期完成这笔交易。有效提高了下订单的效率和吞吐量
@@ -49,4 +51,6 @@
 使用 Redis 数据库作书籍信息的缓存，大大减少 MySQL 数据库压力，提高访问速度和稳定性。
 #### [Lucene](https://github.com/WilliamX1/bookstore/blob/main/hw/hw4/hw4.md)
 使用 Lucene 全文搜索引擎，对书籍简介文本建立索引，使用户可以快速高效进行全文搜索。
+#### [SOAP](https://github.com/WilliamX1/bookstore/blob/main/hw/hw4/hw4.md)
+使用 SOAP Web Service，将书籍的全文搜索开发并部署成 Web Service，使得其他应用可以跨平台访问。
 

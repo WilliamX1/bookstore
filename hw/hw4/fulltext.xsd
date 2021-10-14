@@ -1,0 +1,25 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
+           targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
+
+    <xs:element name="getFulltextRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="text" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getFulltextResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bookliststr" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+<!--    <xs:complexType name="books">-->
+<!--        <xs:sequence>-->
+<!--            <xs:element name="contents" type="xs:string"/>-->
+<!--        </xs:sequence>-->
+<!--    </xs:complexType>-->
+</xs:schema>

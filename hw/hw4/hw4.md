@@ -217,12 +217,109 @@ https://blog.csdn.net/Peacock__/article/details/84099685
 
 ------
 <font color=red> 以下是 pdf-08 内容 </font>
+
 ### 要求
+将全文搜索功能开发并部署为 Web Service。
+
 ### 设计原理
+#### SOAP Web Service 简介
+SOAP(Simple Object Access Protocol) 是一种基于 XML 的 web 服务协议。SOAP 是平台独立的，不依赖于特定的语言。在本项目中，我们使用 JAVA 语言来实现 SOAP web 服务。
+**SOAP 优缺点**
+* Ws Security：SOAP 使用 WS Security 作为其安全的标准，安全性较高。
+* 语言与平台独立：可以使用多种语言来实现 SOAP web 服务，且可以运行在多种平台上。
+* 速度较慢：SOAP 使用 XML 作为数据传输的格式，web 服务每次读取数据时都需要对 XML 进行解析，速度较慢。另外，SOAP 规定了 web 服务需要遵循的许多规范，这导致在传输过程中消耗较多的网络带宽。
+* 依赖于 WDSL：除了使用 WSDL外，SOAP 并不提供其他的机制来让其他应用程序发现服务。
 ### 代码实现
 #### 后端 SpringBoot 代码
-#### 前端 Vue 代码
+[FullTextEndPoint] 参考老师所给代码实现
+```Java
+@Endpoint
+public class FulltextEndpoint {
+    private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
+
+    private BookRepository bookRepository;
+
+    @Autowired
+    public FulltextEndpoint(BookRepository bookRepository) { this.bookRepository = bookRepository; }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getFulltextRequest")
+    @ResponsePayload
+    public GetFulltextResponse getFulltext(@RequestPayload GetFulltextRequest request) {
+        GetFulltextResponse response = new GetFulltextResponse();
+        response.setBookliststr(JSONObject.toJSONString(bookRepository.fulltextSearchBook(request.getText())));
+
+        return response;
+    }
+}
+```
+[WebServiceConfig] 参考老师上课所给样例实现
+```Java
+@EnableWs
+@Configuration
+public class WebServiceConfig extends WsConfigurerAdapter {
+    @Bean
+    public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {
+        MessageDispatcherServlet servlet = new MessageDispatcherServlet();
+        servlet.setApplicationContext(applicationContext);
+        servlet.setTransformWsdlLocations(true);
+        return new ServletRegistrationBean(servlet, "/ws/*");
+    }
+
+    @Bean(name = "fulltext")
+    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema fulltextSchema) {
+        DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
+        wsdl11Definition.setPortTypeName("FulltextPort");
+        wsdl11Definition.setLocationUri("/ws");
+        wsdl11Definition.setTargetNamespace("http://spring.io/guides/gs-producing-web-service");
+        wsdl11Definition.setSchema(fulltextSchema);
+        return wsdl11Definition;
+    }
+
+    @Bean
+    public XsdSchema fulltextSchema() { return new SimpleXsdSchema(new ClassPathResource("fulltext.xsd"));
+    }
+}
+```
+[fulltext.xsd] 用于定义和规范参数传递与结果返回形式
+```xml
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
+           targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
+
+    <xs:element name="getFulltextRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="text" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getFulltextResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bookliststr" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+```
+
 ### 代码运行结果
+使用 Postman 发送 xml 格式的全文搜索请求
+![result4.png](./result4.png)
+SpringBoot 后端显示调用 web service 进行全文搜索
+![result6.png](./result6.png)
+Postman 接收到后端返回的全文搜索结果
+![result5.png](./result5.png)
+
 ### 项目关联文件
+[CountryConfiguration](./CountryConfiguration.java)
+[FulltextClient](./FulltextClient.java)
+[FulltextEndpoint](./FulltextEndpoint.java)
+[WebServiceConfig](./WebServiceConfig.java)
+[fulltext](./fulltext.xsd)
+
 ### 参考
+[08-web service.pdf](./08-web service.pdf)
+https://blog.csdn.net/lihao21/article/details/72860623
+https://blog.csdn.net/qq_41198459/article/details/100161270
 
