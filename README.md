@@ -40,7 +40,7 @@
 #### [Activemq](https://github.com/WilliamX1/bookstore/blob/main/hw/hw1/hw1.md)
 使用 Activemq 实现下订单功能消息队列。当用户点击下订单时，后端 Controller 先使用生产者将用户请求转发给消费者，并迅速返回给用户该订单正在执行中。后端消费者将在空闲时期完成这笔交易。有效提高了下订单的效率和吞吐量
 #### [WebSocket](https://github.com/WilliamX1/bookstore/blob/main/hw/hw2/hw2.md)
-使用 WenSocket 实现一个在线聊天室，用户可以在其中进行实时群聊。
+使用 WebSocket 实现一个在线聊天室，用户可以在其中进行实时群聊。
 #### [Transaction](https://github.com/WilliamX1/bookstore/blob/main/hw/hw2/hw2.md)
 运用增加 SpringBoot 注释方式，增加对下订单服务的事务控制功能，确保下订单动作和数据库的一致性和完整性。
 #### [MultiThreading](https://github.com/WilliamX1/bookstore/blob/main/hw/hw3/hw3.md)
