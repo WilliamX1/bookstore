@@ -34,10 +34,19 @@
 ### 技术栈
 **前端**: Vue、WebPack </br>
 **后端**: SpringBoot、Maven </br>
-**数据库**: MySQL </br>
-**中间件**: Activemq </br>
+**数据库**: MySQL、Redis </br>
+**中间件**: Activemq、WebSocket、Lucene </br>
 ### 技术亮点
 #### [Activemq](https://github.com/WilliamX1/bookstore/blob/main/hw/hw1/hw1.md)
 使用 Activemq 实现下订单功能消息队列。当用户点击下订单时，后端 Controller 先使用生产者将用户请求转发给消费者，并迅速返回给用户该订单正在执行中。后端消费者将在空闲时期完成这笔交易。有效提高了下订单的效率和吞吐量
-
+#### [WebSocket](https://github.com/WilliamX1/bookstore/blob/main/hw/hw2/hw2.md)
+使用 WenSocket 实现一个在线聊天室，用户可以在其中进行实时群聊。
+#### [Transaction](https://github.com/WilliamX1/bookstore/blob/main/hw/hw2/hw2.md)
+运用增加 SpringBoot 注释方式，增加对下订单服务的事务控制功能，确保下订单动作和数据库的一致性和完整性。
+#### [MultiThreading](https://github.com/WilliamX1/bookstore/blob/main/hw/hw3/hw3.md)
+采用面向切口编程理念，对用户访问接口进行访问次数统计。且使用**AtomicCounter**进行原子性计数，保证多线程访问时数据安全可靠。
+#### [Redis](https://github.com/WilliamX1/bookstore/blob/main/hw/hw3/hw3.md)
+使用 Redis 数据库作书籍信息的缓存，大大减少 MySQL 数据库压力，提高访问速度和稳定性。
+#### [Lucene](https://github.com/WilliamX1/bookstore/blob/main/hw/hw4/hw4.md)
+使用 Lucene 全文搜索引擎，对书籍简介文本建立索引，使用户可以快速高效进行全文搜索。
 
