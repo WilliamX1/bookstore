@@ -18,12 +18,13 @@ public class BookRepositoryImpl implements BookRepository {
     private BookDao bookDao;
 
     /*获取图书信息*/
-    public List<Book> getBooks () {
+    public List<Book> getBooks() {
         return bookDao.findByStateEquals(1);
     }
+
     /* 修改书籍库存 */
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
-    public Integer changeBookInventory (Integer bookid, Integer changeinventory, Boolean isadd) throws Exception {
+    public Integer changeBookInventory(Integer bookid, Integer changeinventory, Boolean isadd) throws Exception {
         Book book = null;
         try {
             book = bookDao.findById(bookid);
@@ -37,24 +38,34 @@ public class BookRepositoryImpl implements BookRepository {
             Assert.state(book.getInventory() >= 0, "图书数量不够");
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("图书数量不够");
-        };
+        }
+        ;
         bookDao.save(book);
         return 0;
     }
+
     /* 根据书名查找书籍 */
     public List<Book> getBooksByBookname(String searchbookstr) {
         return bookDao.findByBooknameContaining(searchbookstr);
-    };
+    }
+
+    ;
+
     /*修改图书信息*/
     public Integer editBookInfo(Book book) {
         bookDao.save(book);
         return 0;
-    };
+    }
+
+    ;
+
     /*删除图书*/
     public Integer deleteBook(Integer bookid) {
         Book book = bookDao.findById(bookid);
         book.setState(0);
         bookDao.save(book);
         return 0;
-    };
+    }
+
+    ;
 }

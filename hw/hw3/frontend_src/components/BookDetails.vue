@@ -5,8 +5,8 @@
       <el-row>
         <el-col :span="4">
           <el-image
-            style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
-            :src="require('../assets/E-book-logo.png')" fit="scale-down">
+              style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
+              :src="require('../assets/E-book-logo.png')" fit="scale-down">
           </el-image>
         </el-col>
         <el-col :span="20">
@@ -80,7 +80,8 @@
             <br>
             <el-input-number v-model="buycount" controls-position="right" :min="1" :max="this.book.inventory"
                              size="small"></el-input-number>
-            <el-button v-if="this.$cookie.get('role') === 'ADMIN'" size="mini" round="true" plain="true" @click="add_to_shopping_cart(book.id, 1)" disabled="">
+            <el-button v-if="this.$cookie.get('role') === 'ADMIN'" size="mini" round="true" plain="true"
+                       @click="add_to_shopping_cart(book.id, 1)" disabled="">
               加入购物车<i class="el-icon-shopping-bag-1 el-icon--right"></i></el-button>
             <el-button v-else size="mini" round="true" plain="true" @click="add_to_shopping_cart(book.id, 1)">
               加入购物车<i class="el-icon-shopping-bag-1 el-icon--right"></i></el-button>
@@ -108,7 +109,7 @@
 <script>
 export default {
   name: 'BookDetails.vue',
-  data () {
+  data() {
     return {
       value: 4.6,
       buycount: 1,
@@ -123,17 +124,17 @@ export default {
       book: {}
     }
   },
-  created () {
+  created() {
     this.bookid = parseInt(this.$route.query.bookid)
     this.book = JSON.parse(localStorage.getItem('books')).find((book) => {
       return this.bookid === book.id
     })
   },
   methods: {
-    saveActiveCartItems () {
+    saveActiveCartItems() {
       localStorage.setItem('activecartitems', JSON.stringify([{'bookcount': 1, 'book': this.book}]))
     },
-    add_to_shopping_cart () {
+    add_to_shopping_cart() {
       this.changeBookCount(this.bookid, this.buycount, true)
       this.buycount = 1
     }

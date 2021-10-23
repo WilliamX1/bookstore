@@ -13,8 +13,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "orderitems")
-@JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer","fieldHandler"})
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+@JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @DynamicUpdate
 @DynamicInsert
 public class OrderItem {
@@ -29,7 +29,7 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(generator = "increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     @Column(name = "id")
     private Integer id;
     @Column(name = "bookcount")
@@ -37,7 +37,7 @@ public class OrderItem {
     @Column(name = "bookprice")
     private Integer bookprice;
 
-    public Integer getOrderId () {
+    public Integer getOrderId() {
         return order.getId();
     }
 

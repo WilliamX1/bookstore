@@ -34,19 +34,19 @@
 
 export default {
   name: 'Login.vue',
-  data () {
+  data() {
     return {
       inputusername: this.$cookie.get('username'),
       inputpassword: this.$cookie.get('password')
     }
   },
-  created () {
+  created() {
   },
   methods: {
-    forgetPassword () {
+    forgetPassword() {
       this.$message('请重新注册')
     },
-    check () {
+    check() {
       if (this.inputusername === '') {
         this.$message({
           duration: 1000,

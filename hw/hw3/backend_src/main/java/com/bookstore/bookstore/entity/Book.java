@@ -19,9 +19,9 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name="book") /* 对应数据库表格 */
-@JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer","fieldHandler"}) /* 防止循环引用 */
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+@Table(name = "book") /* 对应数据库表格 */
+@JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"}) /* 防止循环引用 */
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @DynamicUpdate /* 使用数据库自增主键 */
 @DynamicInsert
 public class Book {
@@ -32,22 +32,36 @@ public class Book {
 
     public void addCartItem(CartItem cartItem) {
         this.cartItemList.add(cartItem);
-    };
+    }
+
+    ;
+
     public void deleteCartItem(CartItem cartItem) {
         this.cartItemList.remove(cartItem);
-    };
+    }
+
+    ;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "book")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<OrderItem> orderItemList = new ArrayList<>();
 
-    public void addOrderItem(OrderItem orderItem) { this.orderItemList.add(orderItem);};
-    public void deleteOrderItem(OrderItem orderItem) { this.orderItemList.remove(orderItem); };
+    public void addOrderItem(OrderItem orderItem) {
+        this.orderItemList.add(orderItem);
+    }
+
+    ;
+
+    public void deleteOrderItem(OrderItem orderItem) {
+        this.orderItemList.remove(orderItem);
+    }
+
+    ;
 
     @Id
     @GeneratedValue(generator = "increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     @Column(name = "id")
     private Integer id;
     @Column(name = "bookname")

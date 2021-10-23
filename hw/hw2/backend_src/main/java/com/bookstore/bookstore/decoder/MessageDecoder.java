@@ -15,10 +15,12 @@ public class MessageDecoder implements Decoder.Text<Message> {
     private Map<String, String> messageMap;
 
     @Override
-    public void init(EndpointConfig endpointConfig) {}
+    public void init(EndpointConfig endpointConfig) {
+    }
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+    }
 
     /* Create a new Message object if the message can be decoded */
     @Override
@@ -49,7 +51,7 @@ public class MessageDecoder implements Decoder.Text<Message> {
     }
 
     /* Decode a JSON message into a Map and check if it contains
-    * all the required fields according to its type */
+     * all the required fields according to its type */
     @Override
     public boolean willDecode(String string) {
         boolean decodes = false;

@@ -14,18 +14,16 @@ export default {
     content: String,
     isself: Boolean
   },
-  data () {
+  data() {
     return {
       userName: '',
       msg: '',
       msgList: []
     }
   },
-  mounted () {
+  mounted() {
   },
-  methods: {
-
-  }
+  methods: {}
 }
 </script>
 
@@ -37,6 +35,7 @@ export default {
   flex-direction: row;
   padding: 10px;
 }
+
 .content {
   border: 1px solid #555;
   border-radius: 2px;

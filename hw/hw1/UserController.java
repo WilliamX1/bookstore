@@ -23,7 +23,7 @@ public class UserController {
     WebApplicationContext webApplicationContext;
 
     @GetMapping("/user/testUser")
-    public String test () {
+    public String test() {
         return "This is a test user!";
     }
 
@@ -34,9 +34,10 @@ public class UserController {
         System.out.println(user);
         return new ResponseEntity<>(user == null ? 1 : 0, HttpStatus.OK);
     }
+
     @GetMapping("/user/checkGotoHome") /*检查是否能进入首页*/
-    public ResponseEntity<User> checkUserRole (@RequestParam (required = false) String username,
-                                                 @RequestParam (required = false) String password) {
+    public ResponseEntity<User> checkUserRole(@RequestParam(required = false) String username,
+                                              @RequestParam(required = false) String password) {
         UserService userService = webApplicationContext.getBean(UserService.class);
         System.out.println(userService);
         User user = userService.getUserByUsernameAndPassword(username, password);
@@ -46,29 +47,34 @@ public class UserController {
     }
 
     @GetMapping("/user/getUsers")
-    public ResponseEntity<List<User>> getUsers (@RequestParam (required = false) String username,
-                                                 @RequestParam (required = false) String password) {
+    public ResponseEntity<List<User>> getUsers(@RequestParam(required = false) String username,
+                                               @RequestParam(required = false) String password) {
         User user = userService.getUserByUsernameAndPassword(username, password);
         System.out.println(userService);
-        if (user != null && "ADMIN".equals(user.getRole())) return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+        if (user != null && "ADMIN".equals(user.getRole()))
+            return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
         else return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
     }
+
     @GetMapping("/user/getUsers/{userId}")
     public ResponseEntity<List<User>> getUsers(@PathVariable("userId") Integer userId) {
         UserService userService = webApplicationContext.getBean(UserService.class);
         System.out.println(userService);
         return new ResponseEntity<>(userService.getUsers(userId), HttpStatus.OK);
     }
+
     @PostMapping("/user/editUser")
     public ResponseEntity<Integer> editUserState(String username, String password, Integer userid, String changedstate) {
         User user = userService.getUserByUsernameAndPassword(username, password);
-        if (user != null && "ADMIN".equals((user.getRole()))) return new ResponseEntity<>(userService.editUserState(userid, changedstate), HttpStatus.OK);
+        if (user != null && "ADMIN".equals((user.getRole())))
+            return new ResponseEntity<>(userService.editUserState(userid, changedstate), HttpStatus.OK);
         else return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @PostMapping("/user/register")
     public ResponseEntity<User> register(String username, String password, String email) {
-        if (userService.getUserByUsername(username) != null) return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        if (userService.getUserByUsername(username) != null)
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         else return new ResponseEntity<>(userService.register(username, password, email), HttpStatus.OK);
     }
 
@@ -76,13 +82,16 @@ public class UserController {
     public ResponseEntity<Integer> changeBookCountTo(String username, String password, Integer bookid, Integer bookcount) {
         User user = userService.getUserByUsernameAndPassword(username, password);
         if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        else return new ResponseEntity<>(userService.changeBookCount(user.getId(), bookid, bookcount, false), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(userService.changeBookCount(user.getId(), bookid, bookcount, false), HttpStatus.OK);
     }
+
     @PostMapping("/user/changeBookCountAdd")
     public ResponseEntity<Integer> changeBookCountAdd(String username, String password, Integer bookid, Integer bookcount) {
         User user = userService.getUserByUsernameAndPassword(username, password);
         if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        else return new ResponseEntity<>(userService.changeBookCount(user.getId(), bookid, bookcount, true), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(userService.changeBookCount(user.getId(), bookid, bookcount, true), HttpStatus.OK);
     }
 
     @GetMapping("/user/getCartItems")
@@ -90,15 +99,17 @@ public class UserController {
         User user = userService.getUserByUsernameAndPassword(username, password);
         System.out.println(searchbookstr);
         if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        else if ("".equals(searchbookstr)) return new ResponseEntity<>(userService.getCartItems(user.getId()), HttpStatus.OK);
-        else return new ResponseEntity<>((userService.getCartItemsByBookname(user.getId(), searchbookstr)), HttpStatus.OK);
+        else if ("".equals(searchbookstr))
+            return new ResponseEntity<>(userService.getCartItems(user.getId()), HttpStatus.OK);
+        else
+            return new ResponseEntity<>((userService.getCartItemsByBookname(user.getId(), searchbookstr)), HttpStatus.OK);
     }
 
     @GetMapping("/user/getUserconsumptions")
     public ResponseEntity<String> getUserconsumptions(@RequestParam(required = false)
-                                               @DateTimeFormat(pattern="yyyy-MM-dd") Date startdate,
-                                               @RequestParam(required = false)
-                                               @DateTimeFormat(pattern="yyyy-MM-dd") Date enddate) {
+                                                      @DateTimeFormat(pattern = "yyyy-MM-dd") Date startdate,
+                                                      @RequestParam(required = false)
+                                                      @DateTimeFormat(pattern = "yyyy-MM-dd") Date enddate) {
         return new ResponseEntity<>(userService.getUserconsumptions(startdate, enddate), HttpStatus.OK);
     }
 

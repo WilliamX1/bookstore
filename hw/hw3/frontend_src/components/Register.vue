@@ -13,7 +13,8 @@
               <el-divider></el-divider>
             </el-form-item>
             <el-form-item label="用户名" prop="userName">
-              <el-input type="text" v-model="ruleForm.userName" maxlength="18" show-word-limit @blur="verifyUsernameValid(ruleForm.userName)" clearable></el-input>
+              <el-input type="text" v-model="ruleForm.userName" maxlength="18" show-word-limit
+                        @blur="verifyUsernameValid(ruleForm.userName)" clearable></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="pass">
               <el-input type="password" v-model="ruleForm.pass" autocomplete="off" clearable></el-input>
@@ -22,9 +23,9 @@
               <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" clearable></el-input>
             </el-form-item>
             <el-form-item
-              prop="email"
-              label="邮箱"
-              :rules="[
+                prop="email"
+                label="邮箱"
+                :rules="[
               { required: true, message: '请输入邮箱地址', trigger: 'blur' },
               { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
               ]" clearable>
@@ -44,7 +45,7 @@
 <script>
 export default {
   name: 'Register.vue',
-  data () {
+  data() {
     let validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
@@ -101,7 +102,7 @@ export default {
     }
   },
   methods: {
-    submitForm (formName) {
+    submitForm(formName) {
       if (this.ruleForm.userName === '' || this.ruleForm.pass === '') {
         this.$message({
           duration: 1000,
@@ -149,10 +150,10 @@ export default {
         this.resetForm(formName)
       }
     },
-    resetForm (formName) {
+    resetForm(formName) {
       this.$refs[formName].resetFields()
     },
-    verifyUsernameValid (userName) {
+    verifyUsernameValid(userName) {
       this.axios({
         method: 'GET',
         url: 'http://localhost:9090/user/verifyUsername',

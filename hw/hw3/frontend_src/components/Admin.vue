@@ -5,8 +5,8 @@
       <el-row>
         <el-col :span="4">
           <el-image
-            style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
-            :src="require('../assets/E-book-logo.png')" fit="scale-down">
+              style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
+              :src="require('../assets/E-book-logo.png')" fit="scale-down">
           </el-image>
         </el-col>
         <el-col :span="20">
@@ -121,10 +121,11 @@
             <el-row gutter="20" slot="header">
               <el-col span="4">
                 <!-- Form -->
-                <el-button type="text" @click="dialogFormVisible = true"> 新增图书 </el-button>
+                <el-button type="text" @click="dialogFormVisible = true"> 新增图书</el-button>
 
                 <el-dialog title="新增图书" :visible.sync="dialogFormVisible">
-                  <el-form :model="bookForm" status-icon :rules="bookRules" ref="bookForm" label-width="80px" size="medium">
+                  <el-form :model="bookForm" status-icon :rules="bookRules" ref="bookForm" label-width="80px"
+                           size="medium">
                     <el-form-item label="书名" :label-width="formLabelWidth" prop="bookname">
                       <el-input v-model="bookForm.bookname" autocomplete="off"></el-input>
                     </el-form-item>
@@ -138,7 +139,7 @@
                       <el-input v-model="bookForm.isbn" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="价格" :label-width="formLabelWidth" prop="price"
-                      :rules="[
+                                  :rules="[
                       { required: true, message: '价格不能为空'},
                       { type: 'number', message: '价格必须为整型值'}
                       ]">
@@ -151,7 +152,7 @@
                       <el-input v-model="bookForm.image" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="库存" :label-width="formLabelWidth" prop="inventory"
-                      :rules="[
+                                  :rules="[
                         {required: true, message: '库存不能为空'},
                         { type: 'number', message: '库存必须为整型值'}
                       ]">
@@ -174,7 +175,8 @@
               <div v-for="book in this.activebooks" v-bind:key="book.id">
                 <el-col :span="12">
                   <el-card shadow="hover" style="height: 480px">
-                    <el-image :src="require('../assets/books/' + book.image)" style="width: 75%; height: 200px"></el-image>
+                    <el-image :src="require('../assets/books/' + book.image)"
+                              style="width: 75%; height: 200px"></el-image>
                     <el-input size="small" v-model="book.bookname" :disabled="book.isEditable === false">
                       <template slot="prepend">书名</template>
                     </el-input>
@@ -193,7 +195,8 @@
                     <el-input size="small" v-model="book.inputimage" :disabled="book.isEditable === false">
                       <template slot="prepend">封面路径</template>
                     </el-input>
-                    <el-button v-if="book.isEditable === false" size="small" round="true" plain="true" @click="handleEdit(book.id)">
+                    <el-button v-if="book.isEditable === false" size="small" round="true" plain="true"
+                               @click="handleEdit(book.id)">
                       修改<i class="el-icon-edit el-icon--right"></i></el-button>
                     <el-button v-else size="small" round="true" plain="true" @click="handleEdit(book.id)">
                       提交<i class="el-icon-edit el-icon--right"></i></el-button>
@@ -217,36 +220,36 @@
                 <el-link>统计量</el-link>
               </el-col>
               <el-col span="8">&nbsp;</el-col>
-<!--              <el-col span="8">-->
-<!--                <el-input placeholder="搜索用户" size="mini">-->
-<!--                  <el-button slot="append" icon="el-icon-search" size="mini"></el-button>-->
-<!--                </el-input>-->
-<!--              </el-col>-->
+              <!--              <el-col span="8">-->
+              <!--                <el-input placeholder="搜索用户" size="mini">-->
+              <!--                  <el-button slot="append" icon="el-icon-search" size="mini"></el-button>-->
+              <!--                </el-input>-->
+              <!--              </el-col>-->
             </el-row>
             <el-row>
               <el-table
-                :data="this.activeusers"
-                style="width: 100%"
-                :row-class-name="tableRowClassName"
-                :default-sort = "{prop: 'id', order: 'descending'}"
-                @row-click="changeUserState">
+                  :data="this.activeusers"
+                  style="width: 100%"
+                  :row-class-name="tableRowClassName"
+                  :default-sort="{prop: 'id', order: 'descending'}"
+                  @row-click="changeUserState">
                 <el-table-column
-                  prop="id"
-                  label="用户ID"
-                  width="180"
-                  sortable>
+                    prop="id"
+                    label="用户ID"
+                    width="180"
+                    sortable>
                 </el-table-column>
                 <el-table-column
-                  prop="username"
-                  label="姓名"
-                  width="180"
-                  sortable>
+                    prop="username"
+                    label="姓名"
+                    width="180"
+                    sortable>
                 </el-table-column>
                 <el-table-column
-                  prop="role"
-                  label="角色"
-                  width="180"
-                  sortable>
+                    prop="role"
+                    label="角色"
+                    width="180"
+                    sortable>
                 </el-table-column>
               </el-table>
             </el-row>
@@ -262,7 +265,7 @@
 
 export default {
   name: 'Admin',
-  data () {
+  data() {
     let validateBookName = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入用户名'))
@@ -337,17 +340,17 @@ export default {
     }
   },
   methods: {
-    changeBookInfo (index) {
+    changeBookInfo(index) {
       return 1
     },
-    formatter (row, column) {
+    formatter(row, column) {
       return row.address
     },
-    _route_to_book_details (bookid) {
+    _route_to_book_details(bookid) {
       this.routeToBookDetails(bookid)
     },
     /* 根据用户状态、用户角色显示背景条颜色 */
-    tableRowClassName ({row, rowIndex}) {
+    tableRowClassName({row, rowIndex}) {
       if (row.state === 'Normal') {
         if (row.role === 'ADMIN') return 'admin-row'
         else if (row.role === 'USER') return 'user-row'
@@ -357,7 +360,7 @@ export default {
       return ''
     },
     /* 管理员禁用用户 */
-    changeUserState (row) {
+    changeUserState(row) {
       if (row.role === 'ADMIN') {
         this.$message({
           duration: 1000,
@@ -395,7 +398,7 @@ export default {
       })
     },
     /* 根据书名模糊搜索 */
-    searchBook () {
+    searchBook() {
       if (this.searchbookstr === '') {
         this.activebooks = JSON.parse(localStorage.getItem('books'))
       } else {
@@ -415,7 +418,7 @@ export default {
         })
       }
     },
-    handleEdit (bookid) {
+    handleEdit(bookid) {
       let index = this.bookid_to_index(bookid)
       if (this.activebooks[index].isEditable === false) {
         this.activebooks[index].isEditable = true
@@ -448,7 +451,7 @@ export default {
       }
       this.$forceUpdate()
     },
-    deleteBook (bookid) {
+    deleteBook(bookid) {
       this.$confirm('删除此书籍, 是否继续', '提示', {
         confirmButtonText: '确定删除',
         cancelButtonText: '我再想想',
@@ -460,7 +463,8 @@ export default {
           params: {
             id: bookid
           }
-        }).then(response => {}).catch(error => {
+        }).then(response => {
+        }).catch(error => {
           console.log(error)
         })
         this.$message({
@@ -474,7 +478,7 @@ export default {
         })
       })
     },
-    submitForm (formName) {
+    submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let book = {
@@ -494,7 +498,10 @@ export default {
             params: {
               bookstr: JSON.stringify(book)
             }
-          }).then(response => {}).catch(error => { console.log(error) })
+          }).then(response => {
+          }).catch(error => {
+            console.log(error)
+          })
           this.dialogFormVisible = false
           this.$message({
             duration: 1000,
@@ -507,11 +514,11 @@ export default {
         }
       })
     },
-    resetForm (formName) {
+    resetForm(formName) {
       this.$refs[formName].resetFields()
     }
   },
-  created () {
+  created() {
     this.getBooks(this.$cookie.get('username'), this.$cookie.get('password')).then(() => {
       this.activebooks = JSON.parse(localStorage.getItem('books'))
       this.activebooks.forEach(book => {

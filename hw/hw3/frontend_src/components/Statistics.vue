@@ -5,8 +5,8 @@
       <el-row>
         <el-col :span="4">
           <el-image
-            style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
-            :src="require('../assets/E-book-logo.png')" fit="scale-down">
+              style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
+              :src="require('../assets/E-book-logo.png')" fit="scale-down">
           </el-image>
         </el-col>
         <el-col :span="20">
@@ -56,40 +56,40 @@
             <el-card>
               <div slot="header">
                 <el-col span="14"><h1>书籍热销榜</h1></el-col>
-<!--                <el-col span="8"><el-input placeholder="搜索用户" size="medium"></el-input></el-col>-->
+                <!--                <el-col span="8"><el-input placeholder="搜索用户" size="medium"></el-input></el-col>-->
               </div>
               <el-date-picker
-                v-model="bookdate"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                value-format="yyyy-MM-dd"
-                format="yyyy-MM-dd"
-                @change="__getBooksales__">
+                  v-model="bookdate"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  value-format="yyyy-MM-dd"
+                  format="yyyy-MM-dd"
+                  @change="__getBooksales__">
               </el-date-picker>
               <el-table
-                :data="bookSales"
-                style="width: 100%">
+                  :data="bookSales"
+                  style="width: 100%">
                 <el-table-column
-                  prop="bookid"
-                  label="id"
-                  width="100"
-                  sortable
-                  align="center">
+                    prop="bookid"
+                    label="id"
+                    width="100"
+                    sortable
+                    align="center">
                 </el-table-column>
                 <el-table-column
-                  prop="bookname"
-                  label="书名"
-                  width="240px"
-                  align="center">
+                    prop="bookname"
+                    label="书名"
+                    width="240px"
+                    align="center">
                 </el-table-column>
                 <el-table-column
-                  prop="booksale"
-                  label="销量"
-                  width="180"
-                  sortable
-                  align="center">
+                    prop="booksale"
+                    label="销量"
+                    width="180"
+                    sortable
+                    align="center">
                 </el-table-column>
               </el-table>
             </el-card>
@@ -101,38 +101,38 @@
                 <!--                <el-col span="8"><el-input placeholder="搜索用户" size="medium"></el-input></el-col>-->
               </div>
               <el-date-picker
-                v-model="userdate"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                value-format="yyyy-MM-dd"
-                format="yyyy-MM-dd"
-                @change="_getUserconsumptions">
+                  v-model="userdate"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  value-format="yyyy-MM-dd"
+                  format="yyyy-MM-dd"
+                  @change="_getUserconsumptions">
               </el-date-picker>
               <el-table
-                :data="userSales"
-                style="width: 100%">
+                  :data="userSales"
+                  style="width: 100%">
                 <el-table-column
-                  prop="userid"
-                  label="id"
-                  width="200"
-                  sortable
-                  align="center">
+                    prop="userid"
+                    label="id"
+                    width="200"
+                    sortable
+                    align="center">
                 </el-table-column>
-<!--                <el-table-column-->
-<!--                  prop="username"-->
-<!--                  label="用户名"-->
-<!--                  width="280"-->
-<!--                  sortable-->
-<!--                  align="center">-->
-<!--                </el-table-column>-->
+                <!--                <el-table-column-->
+                <!--                  prop="username"-->
+                <!--                  label="用户名"-->
+                <!--                  width="280"-->
+                <!--                  sortable-->
+                <!--                  align="center">-->
+                <!--                </el-table-column>-->
                 <el-table-column
-                  prop="userconsumption"
-                  label="消费"
-                  width="280"
-                  sortable
-                  align="center">
+                    prop="userconsumption"
+                    label="消费"
+                    width="280"
+                    sortable
+                    align="center">
                 </el-table-column>
               </el-table>
             </el-card>
@@ -146,13 +146,13 @@
 <script>
 export default {
   name: 'Statistics.vue',
-  created () {
+  created() {
     this._getBooksales().then((responsedata) => {
       this.bookSales = responsedata
     })
     this._getUserconsumptions()
   },
-  data () {
+  data() {
     return {
       searchbookstr: '',
       bookSales: [
@@ -173,7 +173,7 @@ export default {
     }
   },
   methods: {
-    _getBooksales () {
+    _getBooksales() {
       return new Promise((resolve, reject) => {
         this.getBooksales(this.bookdate[0], this.bookdate[1]).then((responsedata) => {
           responsedata.forEach(data => {
@@ -183,12 +183,12 @@ export default {
         })
       })
     },
-    __getBooksales__ () {
+    __getBooksales__() {
       this._getBooksales().then((responsedata) => {
         this.bookSales = responsedata
       })
     },
-    _getUserconsumptions () {
+    _getUserconsumptions() {
       this.getUserconsumptions(this.userdate[0], this.userdate[1]).then((responsedata) => {
         this.userSales = responsedata
       })

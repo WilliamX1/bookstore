@@ -5,8 +5,8 @@
       <el-row>
         <el-col :span="4">
           <el-image
-            style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
-            :src="require('../assets/E-book-logo.png')" fit="scale-down">
+              style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
+              :src="require('../assets/E-book-logo.png')" fit="scale-down">
           </el-image>
         </el-col>
         <el-col :span="20">
@@ -52,50 +52,50 @@
     <!--图书视图-->
     <el-main class="cartList">
       <el-date-picker
-        v-model="searchdatarange"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        value-format="yyyy-MM-dd"
-        format="yyyy-MM-dd"
-        @change="searchOrdersByDaterange">
+          v-model="searchdatarange"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+          format="yyyy-MM-dd"
+          @change="searchOrdersByDaterange">
       </el-date-picker>
       <br>
       <el-table
-        :data="activebookSales"
-        style="width: 100%">
+          :data="activebookSales"
+          style="width: 100%">
         <el-table-column
-          prop="bookid"
-          label="id"
-          width="200"
-          sortable
-          align="center">
+            prop="bookid"
+            label="id"
+            width="200"
+            sortable
+            align="center">
         </el-table-column>
         <el-table-column
-          prop="bookname"
-          label="书名"
-          width="460px"
-          align="center">
+            prop="bookname"
+            label="书名"
+            width="460px"
+            align="center">
         </el-table-column>
         <el-table-column
-          prop="booksale"
-          label="购买量"
-          width="160"
-          sortable
-          align="center">
+            prop="booksale"
+            label="购买量"
+            width="160"
+            sortable
+            align="center">
         </el-table-column>
         <el-table-column
-          prop="bookmoney"
-          label="金额"
-          width="160"
-          sortable
-          align="center">
+            prop="bookmoney"
+            label="金额"
+            width="160"
+            sortable
+            align="center">
         </el-table-column>
       </el-table>
       <br>
       <div v-for="order in activeorders" v-bind:key="order.id">
-          <el-card shadow="hover" style="border-color: #f56c6c">
+        <el-card shadow="hover" style="border-color: #f56c6c">
           <div class="orderTitleView">
             <el-row :gutter="10">
               <!--订单信息-->
@@ -115,7 +115,8 @@
             <div class="orderItemView">
               <el-row :gutter="25">
                 <el-col :span="3">
-                  <el-image :src="require('../assets/books/' + orderitem.bookimage)" style="width: 90px; height: 120px;"></el-image>
+                  <el-image :src="require('../assets/books/' + orderitem.bookimage)"
+                            style="width: 90px; height: 120px;"></el-image>
                 </el-col>
                 <el-col :span="8">
                   <el-link type="info" :underline="false">{{orderitem.introduction.substr(0,100)}}</el-link>
@@ -133,8 +134,8 @@
             </div>
             <br>
           </div>
-          </el-card>
-        </div>
+        </el-card>
+      </div>
     </el-main>
     <!--底部-->
     <el-footer>
@@ -149,7 +150,7 @@
 
 export default {
   name: 'HistoryOrders',
-  data () {
+  data() {
     return {
       searchbookstr: '',
       activeorders: [
@@ -185,7 +186,7 @@ export default {
     }
   },
   methods: {
-    searchOrdersByBook (searchbookstr) {
+    searchOrdersByBook(searchbookstr) {
       if (searchbookstr === '') {
         this.activeorders = JSON.parse(localStorage.getItem('orders'))
         this.statisticTotle()
@@ -216,7 +217,7 @@ export default {
         })
       }
     },
-    searchOrdersByDaterange () {
+    searchOrdersByDaterange() {
       if (this.searchdatarange[0] === '' || this.searchdatarange[1] === '') {
         this.activeorders = JSON.parse(localStorage.getItem('orders'))
         this.statisticTotle()
@@ -248,7 +249,7 @@ export default {
         })
       }
     },
-    statisticTotle () {
+    statisticTotle() {
       this.activebookSales = []
       this.bookcounttotle = 0
       this.bookmoneytotle = 0
@@ -281,7 +282,7 @@ export default {
       this.$forceUpdate()
     }
   },
-  created () {
+  created() {
     this.getOrders(this.$cookie.get('username'), this.$cookie.get('password')).then(responsedata => {
       this.activeorders = responsedata
       this.activeorders.forEach(activeorder => {
@@ -295,7 +296,7 @@ export default {
     })
   },
   filters: {
-    timeFormat (val) {
+    timeFormat(val) {
       if (val == null || val === '') {
         return ''
       } else {

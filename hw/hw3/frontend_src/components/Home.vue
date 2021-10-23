@@ -5,8 +5,8 @@
       <el-row>
         <el-col :span="4">
           <el-image
-            style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
-            :src="require('../assets/E-book-logo.png')" fit="scale-down">
+              style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
+              :src="require('../assets/E-book-logo.png')" fit="scale-down">
           </el-image>
         </el-col>
         <el-col :span="20">
@@ -51,7 +51,8 @@
     </header>
     <el-carousel :interval="4000" type="card" height="400px">
       <el-carousel-item v-for="book in this.activebooks" :key="book">
-        <el-image :src="require('../assets/books/' + book.image)" style="height: 100%" @click="_route_to_book_details(book.id)"></el-image>
+        <el-image :src="require('../assets/books/' + book.image)" style="height: 100%"
+                  @click="_route_to_book_details(book.id)"></el-image>
       </el-carousel-item>
     </el-carousel>
     <!--图书视图-->
@@ -60,8 +61,10 @@
         <div v-for="book in this.activebooks" v-bind:key="book.id">
           <el-col :span="6" class="el-col">
             <el-card body-style class="el-card" style="height: 560px;">
-              <el-image :src="require('../assets/books/' + book.image)" style="height: 360px;" @click="_route_to_book_details(book.id)"></el-image>
-              <el-link :underline="false" @click="_route_to_book_details(book.id)"><p>书名：{{ book.bookname }}</p></el-link>
+              <el-image :src="require('../assets/books/' + book.image)" style="height: 360px;"
+                        @click="_route_to_book_details(book.id)"></el-image>
+              <el-link :underline="false" @click="_route_to_book_details(book.id)"><p>书名：{{ book.bookname }}</p>
+              </el-link>
               <br>
               <p>作者：{{ book.author }}</p>
               <p>ISBN：{{ book.isbn }}</p>
@@ -69,10 +72,11 @@
                 <el-col :span="12"><h3>¥ {{ book.price }}</h3></el-col>
                 <el-col :span="12"><p>库存 {{book.inventory}} 件</p></el-col>
               </el-row>
-                <el-button v-if="isAdmin" size="mini" round="true" plain="true" @click="add_to_shopping_cart(book.id, 1)" disabled="">
-                  加入购物车<i class="el-icon-shopping-bag-1 el-icon--right"></i></el-button>
-                <el-button v-else size="mini" round="true" plain="true" @click="add_to_shopping_cart(book.id, 1)">
-                  加入购物车<i class="el-icon-shopping-bag-1 el-icon--right"></i></el-button>
+              <el-button v-if="isAdmin" size="mini" round="true" plain="true" @click="add_to_shopping_cart(book.id, 1)"
+                         disabled="">
+                加入购物车<i class="el-icon-shopping-bag-1 el-icon--right"></i></el-button>
+              <el-button v-else size="mini" round="true" plain="true" @click="add_to_shopping_cart(book.id, 1)">
+                加入购物车<i class="el-icon-shopping-bag-1 el-icon--right"></i></el-button>
               <router-link :to="{name:'Order'}">
                 <el-button v-if="isAdmin" size="mini" round="true" plain="true" disabled>
                   <i class="el-icon-money el-icon--right"></i>立即购买
@@ -89,10 +93,10 @@
     </main>
     <!--分页-->
     <el-pagination
-      layout="prev, pager, next"
-      :page-count="this.pagetotalcount"
-      :current-page="this.curpageidx"
-      @current-change="changePage">
+        layout="prev, pager, next"
+        :page-count="this.pagetotalcount"
+        :current-page="this.curpageidx"
+        @current-change="changePage">
     </el-pagination>
     <!--底部-->
     <footer>
@@ -108,7 +112,7 @@
 
 export default {
   name: 'Home.vue',
-  data () {
+  data() {
     return {
       searchbookstr: '',
       activebooks: [],
@@ -118,7 +122,7 @@ export default {
       curpageidx: 1
     }
   },
-  created () {
+  created() {
     this.isAdmin = this.$cookie.get('role') === 'ADMIN'
     this.getBooks(this.$cookie.get('username'), this.$cookie.get('password')).then(() => {
       this.pagetotalcount = 1 + Math.floor((JSON.parse(localStorage.getItem('books')).length - 1) / this.pagesize)
@@ -129,17 +133,17 @@ export default {
     this.apiVisitHistory()
   },
   methods: {
-    saveActiveCartItems (bookid) {
+    saveActiveCartItems(bookid) {
       localStorage.setItem('activecartitems', JSON.stringify([{'bookcount': 1, 'book': this.bookid_to_book(bookid)}]))
     },
-    _route_to_book_details (bookid) {
+    _route_to_book_details(bookid) {
       this.routeToBookDetails(bookid)
     },
-    add_to_shopping_cart (bookid, bookcount) {
+    add_to_shopping_cart(bookid, bookcount) {
       this.changeBookCount(bookid, bookcount, true)
     },
     /* 根据书名模糊搜索 */
-    searchBook (searchbookstr) {
+    searchBook(searchbookstr) {
       if (searchbookstr === '') {
         this.activebooks = JSON.parse(localStorage.getItem('books'))
       } else {
@@ -157,7 +161,7 @@ export default {
       }
     },
     /* 更换页面 */
-    changePage (val) {
+    changePage(val) {
       this.curpageidx = val
       let startidx = (this.curpageidx - 1) * this.pagesize
       this.activebooks = JSON.parse(localStorage.getItem('books')).slice(startidx, startidx + this.pagesize)

@@ -14,61 +14,61 @@ import ChatRoom from '../components/ChatRoom'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'Login',
-      component: Login
-    },
-    {
-      path: '/Login',
-      name: 'Login',
-      component: Login
-    },
-    {
-      path: '/Home',
-      name: 'Home',
-      component: Home
-    },
-    {
-      path: '/ShoppingCart',
-      name: 'ShoppingCart',
-      component: ShoppingCart
-    },
-    {
-      path: '/Register',
-      name: 'Register',
-      component: Register
-    },
-    {
-      path: '/BookDetails',
-      name: 'BookDetails',
-      component: BookDetails
-    },
-    {
-      path: '/Order',
-      name: 'Order',
-      component: Order
-    },
-    {
-      path: '/Admin',
-      name: 'Admin',
-      component: Admin
-    },
-    {
-      path: '/HistoryOrders',
-      name: 'HistoryOrders',
-      component: HistoryOrders
-    },
-    {
-      path: '/Statistics',
-      name: 'Statistics',
-      component: Statistics
-    },
-    {
-      path: '/ChatRoom',
-      name: 'ChatRoom',
-      component: ChatRoom
-    }
-  ]
+    routes: [
+        {
+            path: '/',
+            name: 'Login',
+            component: Login
+        },
+        {
+            path: '/Login',
+            name: 'Login',
+            component: Login
+        },
+        {
+            path: '/Home',
+            name: 'Home',
+            component: Home
+        },
+        {
+            path: '/ShoppingCart',
+            name: 'ShoppingCart',
+            component: ShoppingCart
+        },
+        {
+            path: '/Register',
+            name: 'Register',
+            component: Register
+        },
+        {
+            path: '/BookDetails',
+            name: 'BookDetails',
+            component: BookDetails
+        },
+        {
+            path: '/Order',
+            name: 'Order',
+            component: Order
+        },
+        {
+            path: '/Admin',
+            name: 'Admin',
+            component: Admin
+        },
+        {
+            path: '/HistoryOrders',
+            name: 'HistoryOrders',
+            component: HistoryOrders
+        },
+        {
+            path: '/Statistics',
+            name: 'Statistics',
+            component: Statistics
+        },
+        {
+            path: '/ChatRoom',
+            name: 'ChatRoom',
+            component: ChatRoom
+        }
+    ]
 })

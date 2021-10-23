@@ -9,7 +9,10 @@ import java.util.List;
 @Repository
 public interface BookDao extends JpaRepository<Book, Long> {
     Book findById(Integer id);
+
     List<Book> findAll();
+
     List<Book> findByBooknameContaining(String searchbookstr);
+
     List<Book> findByStateEquals(Integer state);
 }

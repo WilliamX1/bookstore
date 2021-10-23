@@ -5,8 +5,8 @@
       <el-row>
         <el-col :span="4">
           <el-image
-            style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
-            :src="require('../assets/E-book-logo.png')" fit="scale-down">
+              style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
+              :src="require('../assets/E-book-logo.png')" fit="scale-down">
           </el-image>
         </el-col>
         <el-col :span="20">
@@ -55,9 +55,12 @@
         <div v-for="item in activecartitems" v-bind:key="item.id">
           <div class="cartView">
             <el-row :gutter="25">
-              <el-col :span="1"><el-checkbox v-model="item.isChecked"></el-checkbox></el-col>
+              <el-col :span="1">
+                <el-checkbox v-model="item.isChecked"></el-checkbox>
+              </el-col>
               <el-col :span="3">
-                <el-image :src="require('../assets/books/' + item.book.image)" style="width: 90px; height: 120px;"></el-image>
+                <el-image :src="require('../assets/books/' + item.book.image)"
+                          style="width: 90px; height: 120px;"></el-image>
               </el-col>
               <el-col :span="7">
                 <el-link type="info" :underline="false">{{item.book.introduction}}</el-link>
@@ -67,7 +70,8 @@
               </el-col>
               <el-col :span="4">
                 <el-input-number style="margin-top: 10%;" size="small" v-model="item.bookcount" :min="1"
-                                 label="描述文字" @change="_changeBookCount(item.book.id, item.bookcount)"></el-input-number>
+                                 label="描述文字"
+                                 @change="_changeBookCount(item.book.id, item.bookcount)"></el-input-number>
               </el-col>
               <el-col :span="3">
                 <h3 style="margin-top: 20%;">¥ {{ (item.bookcount * item.book.price).toFixed(2)}}</h3>
@@ -85,7 +89,7 @@
               </el-col>
             </el-row>
           </div>
-        <divider></divider>
+          <divider></divider>
         </div>
       </ul>
     </el-main>
@@ -114,7 +118,7 @@
 
 export default {
   name: 'ShoppingCart',
-  data () {
+  data() {
     return {
       activecartitems: [],
       searchbookstr: '',
@@ -122,13 +126,13 @@ export default {
     }
   },
   methods: {
-    saveActiveCartItems () {
+    saveActiveCartItems() {
       localStorage.setItem('activecartitems', JSON.stringify(this.activecartitems.filter(item => {
         return item.isChecked === true
       })))
     },
     /* 删除某本书全部数量 */
-    deleteBookFromCart (bookid) {
+    deleteBookFromCart(bookid) {
       this.$confirm('删除此书籍, 是否继续', '提示', {
         confirmButtonText: '确定删除',
         cancelButtonText: '我再想想',
@@ -152,12 +156,12 @@ export default {
       })
     },
     /* 修改购物车图书数量更新 */
-    _changeBookCount (bookid, count) {
+    _changeBookCount(bookid, count) {
       this.changeBookCount(bookid, count, false)
       /* 更新界面显示 */
     },
     /* 根据书名查询书籍 */
-    searchCartByBook (searchbookstr) {
+    searchCartByBook(searchbookstr) {
       /* 获取图书数量信息 */
       let cartItems = []
       this.getCartItems(this.searchbookstr).then((responsedata) => {
@@ -172,7 +176,7 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     this.getBooks(this.$cookie.get('username'), this.$cookie.get('password'))
 
     /* 获取图书数量信息 */

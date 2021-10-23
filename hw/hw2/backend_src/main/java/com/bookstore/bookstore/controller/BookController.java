@@ -23,19 +23,20 @@ public class BookController {
     private UserService userService;
 
     @GetMapping(value = "/book/testBook")
-    public String test () {
+    public String test() {
         return "This is a test book!";
     }
 
     @GetMapping("/book/getBooks")
-    public ResponseEntity<List<Book>> getBooks (@RequestParam String username,
-                                                @RequestParam String password) {
+    public ResponseEntity<List<Book>> getBooks(@RequestParam String username,
+                                               @RequestParam String password) {
         User user = userService.getUserByUsernameAndPassword(username, password);
         if (user == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         else return new ResponseEntity<>(bookService.getBooks(), HttpStatus.OK);
     }
+
     @GetMapping("/book/changeBookInventory")
-    public ResponseEntity<Integer> changeBookInventory (Integer bookid, Integer changeinventory, Boolean isadd) {
+    public ResponseEntity<Integer> changeBookInventory(Integer bookid, Integer changeinventory, Boolean isadd) {
         try {
             return new ResponseEntity<>(bookService.changeBookInventory(bookid, changeinventory, isadd), HttpStatus.OK);
         } catch (Exception e) {
@@ -43,16 +44,19 @@ public class BookController {
         }
         return new ResponseEntity<>(-1, HttpStatus.NOT_ACCEPTABLE);
     }
+
     @GetMapping("/book/searchBookByBookname")
     public ResponseEntity<List<Book>> searchBookByBookname(String searchbookstr) {
         return new ResponseEntity<>(bookService.getBooksByBookname(searchbookstr), HttpStatus.OK);
     }
+
     @PostMapping("/book/editBookInfo")
     public ResponseEntity<Integer> editBookInfo(String bookstr) {
         Book book = JSON.parseObject(bookstr, Book.class);
         System.out.println(book);
         return new ResponseEntity<>(bookService.editBookInfo(book), HttpStatus.OK);
     }
+
     @PostMapping("/book/deleteBook")
     public ResponseEntity<Integer> deleteBook(Integer id) {
         return new ResponseEntity<>(bookService.deleteBook(id), HttpStatus.OK);

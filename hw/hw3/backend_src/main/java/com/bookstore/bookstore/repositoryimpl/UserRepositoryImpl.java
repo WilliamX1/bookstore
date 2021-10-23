@@ -28,24 +28,33 @@ public class UserRepositoryImpl implements UserRepository {
     private OrderDao orderDao;
     @Autowired
     private CartItemDao cartItemDao;
+
     /* 获取用户 */
     public User getUserByUsernameAndPassword(String username, String password) {
         return userDao.findByUsernameAndPassword(username, password);
-    };
+    }
+
+    ;
+
     /* 仅通过用户名获取用户信息 */
     public User getUserByUsername(String username) {
         return userDao.findByUsername(username);
-    };
+    }
+
+    ;
+
     /* 获取用户信息 */
-    public List<User> getUsers () {
+    public List<User> getUsers() {
         return userDao.findAll();
     }
+
     /* 获取用户信息 */
-    public List<User> getUsers (Integer userId) {
+    public List<User> getUsers(Integer userId) {
         String role = userDao.findById(userId).getRole();
         if (Objects.equals(role, "ADMIN")) return getUsers();
         else return null;
     }
+
     /* 修改用户 */
     public Integer editUserState(Integer userId, String changedState) {
         User user = userDao.findById(userId);
@@ -53,6 +62,7 @@ public class UserRepositoryImpl implements UserRepository {
         userDao.save(user);
         return 0;
     }
+
     /*用户注册*/
     public User register(String username, String password, String email) {
         User user = new User();
@@ -62,9 +72,10 @@ public class UserRepositoryImpl implements UserRepository {
         userDao.save(user);
         return user;
     }
+
     /* 修改购物车书籍数量 */
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
-    public Integer changeBookCount (Integer userid, Integer bookid, Integer bookcount, Boolean isadd) throws Exception {
+    public Integer changeBookCount(Integer userid, Integer bookid, Integer bookcount, Boolean isadd) throws Exception {
         /*保存购物车信息*/
         User user = null;
         try {
@@ -125,8 +136,9 @@ public class UserRepositoryImpl implements UserRepository {
         cartDao.save(cart);
         return 0;
     }
+
     /* 获取购物车 */
-    public List<CartItem> getCartItems (Integer userid) {
+    public List<CartItem> getCartItems(Integer userid) {
         User user = userDao.findById(userid);
         Cart cart = user.getCart();
         List<CartItem> ans = new ArrayList<>();
@@ -136,7 +148,10 @@ public class UserRepositoryImpl implements UserRepository {
                 ans.remove(ans.get(i));
             }
         return ans;
-    };
+    }
+
+    ;
+
     /* 通过查询书籍名获得购物车项 */
     public List<CartItem> getCartItemsByBookname(Integer userid, String searchbookstr) {
         List<CartItem> cartItems = getCartItems(userid);
@@ -148,7 +163,10 @@ public class UserRepositoryImpl implements UserRepository {
         });
         System.out.println(bookids);
         return cartItems.stream().filter(cartItem -> bookids.contains(cartItem.getBook().getId())).collect(Collectors.toList());
-    };
+    }
+
+    ;
+
     /* 获取某一阶段用户消费情况 */
     public String getUserconsumptions(Date startdate, Date enddate) {
         /* 获取指定时间内订单项 */
@@ -170,5 +188,7 @@ public class UserRepositoryImpl implements UserRepository {
             });
         });
         return JSON.toJSONString(map);
-    };
+    }
+
+    ;
 }

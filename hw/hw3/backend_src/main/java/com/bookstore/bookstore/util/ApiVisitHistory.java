@@ -20,7 +20,7 @@ public class ApiVisitHistory {
      * 定义切面
      */
     @Pointcut("execution(* com.bookstore.bookstore.controller.UserController.apiVisitHistory())")
-    public void pointCut(){
+    public void pointCut() {
 
     }
 
@@ -33,7 +33,7 @@ public class ApiVisitHistory {
         //获取传入目标方法的参数
         Object[] args = joinPoint.getArgs();
         log.info("类名：{}", joinPoint.getSignature().getDeclaringType().getSimpleName());
-        log.info("方法名:{}", joinPoint.getSignature().getName() );
+        log.info("方法名:{}", joinPoint.getSignature().getName());
     }
 
     /**

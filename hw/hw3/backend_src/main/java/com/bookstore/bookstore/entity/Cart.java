@@ -18,8 +18,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "carts")
-@JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer","fieldHandler"})
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+@JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @DynamicUpdate
 @DynamicInsert
 public class Cart {
@@ -32,6 +32,7 @@ public class Cart {
     public void addCartItem(CartItem cartItem) {
         this.cartItems.add(cartItem);
     }
+
     /* 该方法用于向cart中删除cartitem项 */
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void deleteCartItem(CartItem cartItem) {

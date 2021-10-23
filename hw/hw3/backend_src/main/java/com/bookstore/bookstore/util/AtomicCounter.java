@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 计数器，统计当前执行的任务数
+ *
  * @author gh
  * @date 2020/12/25
  */
@@ -36,8 +37,9 @@ public class AtomicCounter {
     public int decrease() {
         return counter.decrementAndGet();
     }
+
     // 清零
-    public void toZero(){
+    public void toZero() {
         counter.set(0);
     }
 

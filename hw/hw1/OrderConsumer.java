@@ -93,10 +93,13 @@ public class OrderConsumer implements CommandLineRunner {
                     /* 将其他书籍库存加回来 */
                     for (Integer j = i; j >= 0; j--) {
                         bookService.changeBookInventory(bookid.get(j), bookcount.get(j), true);
-                    };
+                    }
+                    ;
                     return new ResponseEntity<>(-1, HttpStatus.NOT_ACCEPTABLE);
-                };
-            };
+                }
+                ;
+            }
+            ;
             for (Integer i = 0; i < len; i++) {
                 userService.changeBookCount(userid, bookid.get(i), -bookcount.get(i), true);
             }

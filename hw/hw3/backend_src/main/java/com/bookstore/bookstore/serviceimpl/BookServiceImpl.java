@@ -33,26 +33,34 @@ public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
 
     /* 获取用户信息 */
-    public List<Book> getBooks () {
+    public List<Book> getBooks() {
         return bookRepository.getBooks();
     }
+
     /* 修改书籍库存 */
     @Transactional(propagation = Propagation.REQUIRED)
-    public Integer changeBookInventory (Integer bookid, Integer changeinventory, Boolean isadd) throws Exception {
+    public Integer changeBookInventory(Integer bookid, Integer changeinventory, Boolean isadd) throws Exception {
         try {
             return bookRepository.changeBookInventory(bookid, changeinventory, isadd);
         } catch (Exception e) {
             throw new RuntimeException("图书数量不够");
         }
     }
+
     /* 根据书名查找书籍 */
     public List<Book> getBooksByBookname(String searchbookstr) {
         return bookRepository.getBooksByBookname(searchbookstr);
-    };
+    }
+
+    ;
+
     /* 修改图书信息 */
     public Integer editBookInfo(Book book) {
         return bookRepository.editBookInfo(book);
-    };
+    }
+
+    ;
+
     /* 删除图书 */
     public Integer deleteBook(Integer bookid) {
         return bookRepository.deleteBook(bookid);

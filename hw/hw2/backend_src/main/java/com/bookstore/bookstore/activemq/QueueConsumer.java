@@ -37,6 +37,7 @@ public class QueueConsumer {
     public MessageConsumer getConsumer() {
         return consumer;
     }
+
     /* 获取 LOG */
     public Logger getLog() {
         return LOG;

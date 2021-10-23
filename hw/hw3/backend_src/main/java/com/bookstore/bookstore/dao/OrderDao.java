@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface OrderDao extends JpaRepository<Order, Long> {
     List<Order> findById(Integer id);
+
     List<Order> findAllByTimestampBetween(Date startdate, Date enddate);
+
     List<Order> findAll();
 }

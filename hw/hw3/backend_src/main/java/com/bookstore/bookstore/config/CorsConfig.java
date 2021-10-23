@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * AJAX请求跨域
+ *
  * @author DongD
  * @time 2021-05-13
  */

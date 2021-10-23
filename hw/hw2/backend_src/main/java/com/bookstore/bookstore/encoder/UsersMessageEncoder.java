@@ -11,10 +11,12 @@ import java.io.StringWriter;
 
 public class UsersMessageEncoder implements Encoder.Text<UsersMessage> {
     @Override
-    public void init(EndpointConfig endpointConfig) {}
+    public void init(EndpointConfig endpointConfig) {
+    }
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+    }
 
     @Override
     public String encode(UsersMessage usersMessage) throws EncodeException {

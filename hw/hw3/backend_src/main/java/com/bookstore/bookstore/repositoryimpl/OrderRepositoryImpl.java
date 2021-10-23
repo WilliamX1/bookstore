@@ -26,6 +26,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     private BookDao bookDao;
     @Autowired
     private UserDao userDao;
+
     /* 添加订单信息 */
     public Integer addOrderFromUser(Integer userid, Integer price, String receivername, String address,
                                     List<Integer> bookid, List<Integer> bookcount, List<Integer> bookprice) {
@@ -40,7 +41,8 @@ public class OrderRepositoryImpl implements OrderRepository {
             orderItem.setBookprice(bookprice.get(i));
             orderItem.setOrder(order);
             order.addOrderItem(orderItem);
-        };
+        }
+        ;
         User user = userDao.findById(userid);
         order.setUser(user);
         order.setPrice(price);
@@ -49,9 +51,12 @@ public class OrderRepositoryImpl implements OrderRepository {
         user.addOrderList(order);
         userDao.save(user);
         return order.getId();
-    };
+    }
+
+    ;
+
     /* 获取订单信息 */
-    public List<Order> getOrders (Integer userid) {
+    public List<Order> getOrders(Integer userid) {
         /* 管理员获取全部 */
         if (userid == 0) {
             List<Order> orders = new ArrayList<>();
@@ -60,11 +65,13 @@ public class OrderRepositoryImpl implements OrderRepository {
                 orders.addAll(user.getOrderList());
             });
             return orders;
-        }
-        else return userDao.findById(userid).getOrderList();
-    };
+        } else return userDao.findById(userid).getOrderList();
+    }
+
+    ;
+
     /* 获取订单详情物品信息 */
-    public List<OrderItem> getOrderItems (Integer userid) {
+    public List<OrderItem> getOrderItems(Integer userid) {
         if (userid == 0) {
             List<User> users = userDao.findAll();
             List<OrderItem> orderItems = new ArrayList<>();
@@ -72,8 +79,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 orderItems.addAll(getOrderItems(user.getId()));
             });
             return orderItems;
-        }
-        else {
+        } else {
             List<Order> orders = getOrders(userid);
             List<OrderItem> orderItems = new ArrayList<>();
             orders.forEach(order -> {
@@ -81,7 +87,10 @@ public class OrderRepositoryImpl implements OrderRepository {
             });
             return orderItems;
         }
-    };
+    }
+
+    ;
+
     /* 根据书名查找订单信息 */
     public List<Order> getOrdersByBook(Integer userid, String searchbookstr) {
         List<Book> books = bookDao.findByBooknameContaining(searchbookstr);
@@ -102,7 +111,9 @@ public class OrderRepositoryImpl implements OrderRepository {
         });
 
         return orders;
-    };
+    }
+
+    ;
 
     /* 根据时间范围搜索订单信息 */
     public List<Order> getOrdersByDaterange(Integer userid, Date startdate, Date enddate) {
@@ -114,7 +125,9 @@ public class OrderRepositoryImpl implements OrderRepository {
         return historyOrdersAccordingTime.stream().
                 filter((order) -> historyOrdersAccordingUserid.contains(order)).
                 collect(Collectors.toList());
-    };
+    }
+
+    ;
 
     /* 统计指定时间范围内各种书籍销量, 以JSON数据格式返回 */
     public String getBooksSales(Date startdate, Date enddate) {
@@ -139,5 +152,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             else map.put(bookid, bookcount);
         });
         return JSON.toJSONString(map);
-    };
+    }
+
+    ;
 }

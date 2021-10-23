@@ -16,9 +16,9 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="orders")
-@JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer","fieldHandler"})
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+@Table(name = "orders")
+@JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @DynamicUpdate
 @DynamicInsert
 public class Order {
@@ -30,6 +30,7 @@ public class Order {
     public void addOrderItem(OrderItem orderItem) {
         this.orderItems.add(orderItem);
     }
+
     public void deleteOrderItem(OrderItem orderItem) {
         this.orderItems.remove(orderItem);
     }
@@ -40,7 +41,7 @@ public class Order {
 
     @Id
     @GeneratedValue(generator = "increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     @Column(name = "id")
     private Integer id;
     @Column(name = "price")

@@ -11,10 +11,12 @@ import java.io.StringWriter;
 
 public class JoinMessageEncoder implements Encoder.Text<JoinMessage> {
     @Override
-    public void init(EndpointConfig endpointConfig) {}
+    public void init(EndpointConfig endpointConfig) {
+    }
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+    }
 
     @Override
     public String encode(JoinMessage joinMessage) throws EncodeException {

@@ -1,12 +1,12 @@
 <template>
-  <div class = "ChatRoom">
+  <div class="ChatRoom">
     <!--顶部导航栏-->
     <header class="navigationBar">
       <el-row>
         <el-col :span="4">
           <el-image
-            style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
-            :src="require('../assets/E-book-logo.png')" fit="scale-down">
+              style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
+              :src="require('../assets/E-book-logo.png')" fit="scale-down">
           </el-image>
         </el-col>
         <el-col :span="20">
@@ -56,7 +56,8 @@
         <div class="wrapper">
           <h3 style="font-size: 26px; font-family: 楷体; font-weight: bold; margin-bottom: 16px">群聊</h3>
           <div class="message-panel">
-            <msg-box v-for="(item, index) of msgList" :key="index + Math.random()" :uname="item.name" :content="item.msg" :isself="item.isSelf"></msg-box>
+            <msg-box v-for="(item, index) of msgList" :key="index + Math.random()" :uname="item.name"
+                     :content="item.msg" :isself="item.isSelf"></msg-box>
           </div>
           <div class="input-area">
             <textarea class="input" v-model="msg"></textarea>
@@ -80,9 +81,10 @@
 
 <script>
 import msgBox from './MsgBox'
+
 export default {
   name: 'chat',
-  data () {
+  data() {
     return {
       websocket: null,
       content: 'hahhahaha',
@@ -95,7 +97,7 @@ export default {
   components: {
     msgBox
   },
-  created () {
+  created() {
     // 页面刚进入时开启长连接
     this.initWebSocket()
   },
@@ -103,33 +105,37 @@ export default {
     // 页面销毁时关闭长连接
     this.websocketclose()
   },
-  mounted () {
+  mounted() {
 
   },
   methods: {
-    sendJoinMsg () {
+    sendJoinMsg() {
       let data = {'type': 'join', 'name': this.$cookie.get('username')}
       console.log('Send: Join message', data)
       this.websocketsend(JSON.stringify(data))
     },
-    sendChatMsg () {
+    sendChatMsg() {
       if (this.msg === '') return
       let data = {'type': 'chat', 'name': this.$cookie.get('username'), 'target': 'all', 'message': this.msg}
       console.log('Send: Chat message', data)
       this.websocketsend(JSON.stringify(data))
       this.msg = ''
     },
-    getChatMsg (e) {
-      let data = {'name': e.name, 'msg': e.message, 'isSelf': e.name.toString() === this.$cookie.get('username').toString()}
+    getChatMsg(e) {
+      let data = {
+        'name': e.name,
+        'msg': e.message,
+        'isSelf': e.name.toString() === this.$cookie.get('username').toString()
+      }
       console.log('Get: Chat message', data)
       this.msgList.push(data)
     },
-    getUsersMsg (e) {
+    getUsersMsg(e) {
       let data = e.userlist
       console.log('Get: Users message', data)
       this.userList = data
     },
-    initWebSocket () { // 初始化weosocket
+    initWebSocket() { // 初始化weosocket
       const wsuri = 'ws://localhost:9090/' + 'websocketbot'// ws地址
       this.websocket = new WebSocket(wsuri)
       this.websocket.onopen = this.websocketonopen
@@ -140,24 +146,24 @@ export default {
       this.websocket.onclose = this.websocketclose
     },
 
-    websocketonopen () {
+    websocketonopen() {
       console.log('WebSocket 连接成功')
       this.sendJoinMsg()
     },
-    websocketonerror (e) { // 错误
+    websocketonerror(e) { // 错误
       console.log('WebSocket 连接发生错误')
     },
-    websocketonmessage (e) { // 数据接收
+    websocketonmessage(e) { // 数据接收
       // 接收数据
       console.log('OnMessage: ', e)
       let data = JSON.parse(e.data)
       if (data.type === 'chat') this.getChatMsg(data)
       else if (data.type === 'users') this.getUsersMsg(data)
     },
-    websocketsend (data) { // 数据发送
+    websocketsend(data) { // 数据发送
       this.websocket.send(data)
     },
-    websocketclose (e) { // 关闭
+    websocketclose(e) { // 关闭
       console.log('connection closed (' + e.code + ')')
     }
   }
@@ -180,6 +186,7 @@ export default {
   align-items: center;
   padding-top: 10px;
 }
+
 .message-panel {
   width: 90%;
   height: 60%;
@@ -188,6 +195,7 @@ export default {
   overflow-x: hidden;
   margin-left: 5%;
 }
+
 .input-area {
   width: 90%;
   height: 25%;
@@ -196,15 +204,17 @@ export default {
   border: 1px solid green;
   margin-left: 5%;
 }
+
 .send-btn {
   position: absolute;
   right: 10px;
   bottom: 10px;
 }
+
 .input {
   width: 100%;
   height: 100%;
-  border:  0px #ebebeb solid;
+  border: 0px #ebebeb solid;
   border-radius: 4px;
   outline: none;
   padding: 5px;

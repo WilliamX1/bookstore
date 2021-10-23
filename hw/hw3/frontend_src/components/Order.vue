@@ -5,8 +5,8 @@
       <el-row>
         <el-col :span="4">
           <el-image
-            style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
-            :src="require('../assets/E-book-logo.png')" fit="scale-down">
+              style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
+              :src="require('../assets/E-book-logo.png')" fit="scale-down">
           </el-image>
         </el-col>
         <el-col :span="20">
@@ -109,7 +109,8 @@
                 <el-checkbox checked="true" disabled="true"></el-checkbox>
               </el-col>
               <el-col :span="3">
-                <el-image :src="require('../assets/books/' + item.book.image)" style="width: 90px; height: 120px;"></el-image>
+                <el-image :src="require('../assets/books/' + item.book.image)"
+                          style="width: 90px; height: 120px;"></el-image>
               </el-col>
               <el-col :span="7">
                 <el-link type="info" :underline="false">{{item.book.introduction}}</el-link>
@@ -151,7 +152,7 @@
 
 export default {
   name: 'Order.vue',
-  data () {
+  data() {
     return {
       curConsignee: 0,
       consignees: [
@@ -177,11 +178,11 @@ export default {
     }
   },
   methods: {
-    chooseConsignee (key) {
+    chooseConsignee(key) {
       this.curConsignee = key
     },
     /* 用户提交 */
-    submitOrder () {
+    submitOrder() {
       this.stepindex = 3
       this.show_or_no_show = false
       if (this.activeitems.length === 0) {
@@ -196,7 +197,7 @@ export default {
       this.addOrderFromUser()
     },
     /* 生成订单 */
-    addOrderFromUser () {
+    addOrderFromUser() {
       let bookid = []
       let bookcount = []
       let bookprice = []
@@ -237,7 +238,7 @@ export default {
       this.getBooks(this.$cookie.get('username'), this.$cookie.get('password'))
     }
   },
-  created () {
+  created() {
     this.getBooks(this.$cookie.get('username'), this.$cookie.get('password'))
 
     /* 获取图书数量信息 */

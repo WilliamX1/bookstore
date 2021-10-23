@@ -50,8 +50,7 @@ public class BotEndpoint {
             logger.log(Level.INFO, "Received: {0}", joinMessage.toString());
             sendAll(session, new InfoMessage(joinMessage.getName() + " has joined the chat."));
             sendAll(session, new UsersMessage(this.getUserList(session)));
-        }
-        else if (msg instanceof ChatMessage) {
+        } else if (msg instanceof ChatMessage) {
             ChatMessage chatMessage = (ChatMessage) msg;
             session.getUserProperties().put("name", chatMessage.getName());
             session.getUserProperties().put("target", chatMessage.getTarget());
@@ -82,7 +81,7 @@ public class BotEndpoint {
     }
 
     /* Forward a message to all connected clients
-    * The endpoint figures what encoder to use based on the message type */
+     * The endpoint figures what encoder to use based on the message type */
     public synchronized void sendAll(Session session, Object msg) {
         try {
             for (Session s : mySession) {
