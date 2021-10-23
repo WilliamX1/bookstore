@@ -2,6 +2,7 @@
 #### id: 519021910861
 #### name: xuhuidong
 #### [项目 GitHub 网址](https://github.com/WilliamX1/bookstore.git/)
+#### [项目后端源代码 - backend](./backend_src)
 #### [项目后端源代码 - eureka-client](./eureka-client/src)
 #### [项目后端源代码 - eureka-service](./eureka-service/src)
 #### [项目后端源代码 - gateway](./gateway/src)
@@ -172,7 +173,7 @@ server.port = 10101
 [Module - eureka-service](./eureka-service)
 
 ### 参考
-[09-microservices.pdf](./09-microservices)
+[09-microservices.pdf](./09-microservices.pdf)
 https://segmentfault.com/a/1190000015798054
 https://www.cnblogs.com/cjsblog/p/9525720.html
 https://juejin.cn/post/6844903940312530957
@@ -182,5 +183,101 @@ https://blog.csdn.net/qq_34046046/article/details/109853508
 https://stackoverflow.com/questions/63693570/cannot-resolve-org-springframework-cloudspring-cloud-starter-netflix-eureka-cli
 https://juejin.cn/post/6844903895030824973
 
+------
+<font color=red> 以下是 pdf-10 内容 </font>
 
+### 要求
+在 E-Book 中增加 HTTPS 通信功能，并且观察程序运行时有什么不同。编写文档，将程序运行时的过程截图，并解释为什么会出现和之前不同的差异。
+
+### 设计原理
+#### HTTPS 简介
+HTTPS 是在 HTTP 上建立 SSL 加密层，并对传输数据进行加密，是 HTTP 协议的安全版。HTTPS 被广泛应用于万维网上安全敏感的通讯，例如交易支付方面。
+HTTPS 可以对数据进行加密，并建立一个信息安全通道，来保证传输过程中的数据安全。还可以对网站服务器进行真实身份认证。
+#### HTTPS 原理
+HTTPS 协议的主要功能基本都依赖于 TLS / SSL 协议，TLS / SSL 的功能实现主要依赖于三类基本算法：散列函数、对称加密和非对称加密，其利用非对称加密实现身份认证和密钥协商，对称加密算法采用协商的密钥对数据加密，基于散列函数验证信息的完整性。
+* 对称加密
+加密和解密使用同一个密钥。在互联网上转发密钥时，如果通信被监听那么密钥就可能会落入攻击者之手，同时也失去了加密的意义，另外还得设法安全地保管接收到的密钥。
+* 非对称加密
+公开密钥加密使用一对非对称的密钥。一把是私有密钥，一把是公开密钥。使用公开密钥加密的方式，发送密文的一方使用对方的公开密钥进行加密处理，对方收到被加密的信息后，再使用自己的私有密钥进行解密。利用这种方式，不需要发送用来解密的私有密钥，也不必担心密钥被攻击者窃听而盗走。
+非对称加密的特点是信息传输一对多，服务器只需要维持一个私钥就能够和多个客户端进行加密通信。
+* 对称加密 + 非对称加密（HTTPS 采用这种方式）
+使用对称加密的好处是解密的效率比较快，使用非对称密钥的好处是可以使得传输的内容不能被破解。发送密文的一方使用对方的公钥进行加密处理“对称的密钥”，然后对方用自己的私钥解密拿到“对称的密钥”，这样可以确保交换的密钥时安全的前提下，使用对称加密方式进行通信。所以，HTTPS 采用对称加密和非对称加密两者并用的混合加密机制。
+#### 数字签名
+数字签名能确定消息确实是由发送方签名并发出来的，还能确定消息的完整性，证明数据是否未被篡改过。
+#### HTTPS 工作流程
+1. Client 发送一个 HTTPS 请求，根据 RFC2818 的规定，Client 直到需要连接 Server 的 443（默认）端口。
+2. Server 把事先配置好的公钥证书（public key certificate）返回给客户端。
+3. Client 验证公钥证书：比如是否在有效期内，证书的用途是不是匹配 Client 请求的站点，是不是在 CRL 吊销列表中，它的上一级证书是否有效（这是一个递归的过程，直到验证到根证书）。如果验证通过则继续，不通过则显示警告信息。
+4. Client 使用伪随机数生成器生成加密所使用的对称密钥，然后用证书的公钥加密这个对称密钥，发送给 Server。
+5. Server 使用自己的私钥（private key）解密这个消息，得到对称密钥。至此，Client 和 Server 双方都持有了相同的对称密钥。
+6. Server 使用对称密钥加密“明文内容A”，发送给 Client。
+7. Client 使用对称密钥解密相应的密文，得到“明文内容A”。
+8. Client 再次发起 HTTPS 的请求，使用对称密钥加密请求的“明文内容B”，然后 Server 使用对称密钥解密密文，得到“明文内容B”。
+
+### 代码实现
+#### 后端 SpringBoot 代码
+[BookstoreApplication] - 启动类，配置 HTTP 跳转到 HTTPS。
+```Java
+public class BookstoreApplication {
+	...
+	@Bean
+    public Connector connector() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setScheme("http");
+        connector.setPort(8787);
+        connector.setSecure(false);
+        connector.setRedirectPort(9090);
+        return connector;
+    }
+    
+    @Bean
+    public TomcatServletWebServerFactory tomcatServletWebServerFactory(Connector connector) {
+        TomcatServletWebServerFactory tomcatServletWebServerFactory = new TomcatServletWebServerFactory() {
+            @Override
+            protected void postProcessContext(Context context) {
+                SecurityConstraint securityConstraint=new SecurityConstraint();
+                securityConstraint.setUserConstraint("CONFIDENTIAL");
+                SecurityCollection collection=new SecurityCollection();
+                collection.addPattern("/*");
+                securityConstraint.addCollection(collection);
+                context.addConstraint(securityConstraint);
+            }
+        };
+        tomcatServletWebServerFactory.addAdditionalTomcatConnectors(connector);
+        return tomcatServletWebServerFactory;
+    }
+}
+```
+[application.properties] - 配置 ssl
+```
+# ssl 安全性配置
+server.ssl.key-store=backend/key/test.keystore
+server.ssl.key-store-password=200176
+server.ssl.keyAlias=testKey
+```
+
+### 代码运行结果
+* 在项目终端创建自签证书
+```cmd
+> keytool -genkey -v -alias testKey -keyalg RSA -validity 3650 -keystore ./key/test.
+```
+![signature](./signature.png)
+* 不配置 HTTP 请求自动跳转时，因为已经将自签的数字签名上传至 SpringBoot 内嵌的  tomcat 中，所以在谷歌浏览器中无法通过 HTTP 访问相应端口。
+![ssl-nohttps](./ssl-nohttps.png)
+* 由于是自签的数字证书而非从 CA 机构获取，因此在谷歌浏览器中通过 HTTPS 访问相应端口时，虽然能够正常访问内容，但会提示警告信息，即该证书没有经过 CA 认证是不安全的。
+![https-nosecurity](./https-nosecurity.png)
+* 运行后端代码时，因为设置了 HTTP 请求自动跳转到 HTTPS 请求，因此会出现 HTTP 和 HTTPS 两个不同的端口。
+![run](./run.png)
+* 配置 HTTP 请求自动跳转到 HTTPS 请求后，通过 HTTP 和对应的 HTTP 端口 8787 访问时，会自动跳转到 HTTPS 和对应的 HTTPS 端口访问。
+
+### 项目关联文件
+[application.properties](./application.properties)
+[BookstoreApplication.java](./BookstoreApplication.java)
+[key](./key)
+
+### 参考
+[10-security](./10-security.pdf)
+https://www.cnblogs.com/zhjh256/p/12541893.html
+https://www.cnblogs.com/chenpi/p/9696371.html
+https://www.jianshu.com/p/a55590f486a2
 
