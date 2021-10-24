@@ -1,7 +1,6 @@
 # hw5
 #### id: 519021910861
 #### name: xuhuidong
-#### [项目 GitHub 网址](https://github.com/WilliamX1/bookstore.git/)
 #### [项目后端源代码 - backend](./backend_src)
 #### [项目后端源代码 - eureka-client](./eureka-client/src)
 #### [项目后端源代码 - eureka-service](./eureka-service/src)
@@ -270,6 +269,12 @@ server.ssl.keyAlias=testKey
 ![run](./run.png)
 * 配置 HTTP 请求自动跳转到 HTTPS 请求后，通过 HTTP 和对应的 HTTP 端口 8787 访问时，会自动跳转到 HTTPS 和对应的 HTTPS 端口访问。
 
+#### 增加 HTTPS 通信功能后，运行的区别
+* 访问链接从 http 变为 https。http 协议是超文本传输协议，信息时明文传输，所用默认端口是 80，连接时无状态的。而 https 协议需要从 CA 申请证书（一般是付费证书），默认端口是 443，且 https 协议是由 SSL + HTTP 协议构建的可进行加密传输、身份认证的网络协议，更加安全。
+* 连接过程中多一次 SSL 握手，类似于 TCP 的 3 次握手建立 TCP 连接，SSL 握手用于建立 SSL层的连接，具体握手过程见 "HTTPS 工作流程"。
+* 浏览器访问时需要增加证书认证，HTTPS 核心是数据传输之前的握手，握手过程中确定了数据加密的密码。在握手过程中，网站会向浏览器发送 SSL 证书，SSL 证书里包含了网站域名、有效期、证书颁发机构以及用于加密传输密码的公钥等信息，具体验证细节见 "HTTPS 原理"。
+* 代码运行时区别详见 "代码运行结果"。
+
 ### 项目关联文件
 [application.properties](./application.properties)
 [BookstoreApplication.java](./BookstoreApplication.java)
@@ -280,4 +285,5 @@ server.ssl.keyAlias=testKey
 https://www.cnblogs.com/zhjh256/p/12541893.html
 https://www.cnblogs.com/chenpi/p/9696371.html
 https://www.jianshu.com/p/a55590f486a2
+https://www.runoob.com/w3cnote/https-ssl-intro.html
 
