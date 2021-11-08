@@ -207,7 +207,7 @@ export default {
       })
       this.axios({
         method: 'POST',
-        url: 'http://localhost:9090/order/addOrderFromUser',
+        url: 'https://localhost:9090/order/addOrderFromUser',
         params: {
           username: this.$cookie.get('username'),
           password: this.$cookie.get('password'),

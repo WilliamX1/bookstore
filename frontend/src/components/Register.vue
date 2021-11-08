@@ -113,7 +113,7 @@ export default {
           if (valid) {
             this.$axios({
               method: 'POST',
-              url: 'http://localhost:9090/user/register',
+              url: 'https://localhost:9090/user/register',
               params: {
                 username: this.ruleForm.userName,
                 password: this.ruleForm.pass,
@@ -155,7 +155,7 @@ export default {
     verifyUsernameValid (userName) {
       this.axios({
         method: 'GET',
-        url: 'http://localhost:9090/user/verifyUsername',
+        url: 'https://localhost:9090/user/verifyUsername',
         params: {
           username: userName
         }

@@ -374,7 +374,7 @@ export default {
       }).then(() => {
         this.axios({
           method: 'POST',
-          url: 'http://localhost:9090/user/editUser',
+          url: 'https://localhost:9090/user/editUser',
           params: {
             username: this.$cookie.get('username'),
             password: this.$cookie.get('password'),
@@ -401,7 +401,7 @@ export default {
       } else {
         this.$axios({
           methods: 'GET',
-          url: 'http://localhost:9090/book/searchBookByBookname',
+          url: 'https://localhost:9090/book/searchBookByBookname',
           params: {
             searchbookstr: this.searchbookstr
           }
@@ -431,7 +431,7 @@ export default {
         this.activebooks[index].isEditable = false
         this.$axios({
           method: 'POST',
-          url: 'http://localhost:9090/book/editBookInfo',
+          url: 'https://localhost:9090/book/editBookInfo',
           params: {
             id: this.activebooks[index].id,
             bookstr: JSON.stringify(this.activebooks[index])
@@ -456,7 +456,7 @@ export default {
       }).then(() => {
         this.$axios({
           method: 'POST',
-          url: 'http://localhost:9090/book/deleteBook',
+          url: 'https://localhost:9090/book/deleteBook',
           params: {
             id: bookid
           }
@@ -490,7 +490,7 @@ export default {
 
           this.$axios({
             method: 'POST',
-            url: 'http://localhost:9090/book/editBookInfo',
+            url: 'https://localhost:9090/book/editBookInfo',
             params: {
               bookstr: JSON.stringify(book)
             }

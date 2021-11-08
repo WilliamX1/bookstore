@@ -156,7 +156,7 @@ export default {
       } else {
         this.$axios({
           methods: 'GET',
-          url: this.searchtype === true ? 'http://localhost:9090/book/fulltextSearchBook' : 'http://localhost:9090/book/searchBookByBookname',
+          url: this.searchtype === true ? 'https://localhost:9090/book/fulltextSearchBook' : 'https://localhost:9090/book/searchBookByBookname',
           params: {
             searchbookstr: searchbookstr
           }
