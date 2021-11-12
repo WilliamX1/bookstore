@@ -54,7 +54,8 @@
       <el-row gutter="10" style="margin: 20px 120px 20px 120px;">
         <el-col :span="2"></el-col>
         <el-col :span="8">
-          <el-image :src="require('../assets/books/' + this.book.image)" style="width: 100%;"></el-image>
+<!--          <el-image :src="require('../assets/books/' + this.book.image)" style="width: 100%;"></el-image>-->
+          <el-image :src="this.book.imageBase64" style="width: 100%;"></el-image>
         </el-col>
         <el-col :span="12" style="text-align: left; margin-left: 30px;">
           <el-card style="height: 500px">

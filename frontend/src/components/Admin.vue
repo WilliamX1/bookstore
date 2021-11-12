@@ -3,14 +3,14 @@
     <!--顶部导航栏-->
     <header class="navigationBar">
       <el-row>
-        <el-col :span="4">
+        <el-col :span=4>
           <el-image
             style="height: 56px; margin:4px 5px 2px 5px; opacity: 0.4;"
             :src="require('../assets/E-book-logo.png')" fit="scale-down">
           </el-image>
         </el-col>
-        <el-col :span="20">
-          <el-menu :default-active="1" class="el-menu-demo" mode="horizontal">
+        <el-col :span=20>
+          <el-menu default-active="1" class="el-menu-demo" mode="horizontal">
             <el-menu-item index="1">
               <router-link to='/Home'>首页</router-link>
             </el-menu-item>
@@ -56,57 +56,57 @@
         <h1 style="font-family: 楷体;" v-else>用户徐惠东, 欢迎回来</h1>
       </el-row>
       <!--浏览量、购物车量、下单量卡片-->
-      <el-row style="margin: 0 80px 0 80px;" gutter="20">
-        <el-col span="6">
+      <el-row style="margin: 0 80px 0 80px;" :gutter=20>
+        <el-col :span=6>
           <el-card>
             <el-row>
-              <el-col span="10">
+              <el-col :span=10>
                 <el-image style="height: 60%; width: 60%;"
                           src="https://img.icons8.com/carbon-copy/100/000000/user.png"></el-image>
               </el-col>
-              <el-col span="14">
+              <el-col :span=14>
                 <h2>29.75 M</h2>
                 <h4>总用户数</h4>
               </el-col>
             </el-row>
           </el-card>
         </el-col>
-        <el-col span="6">
+        <el-col :span=6>
           <el-card>
             <el-row>
-              <el-col span="10">
+              <el-col :span=10>
                 <el-image style="height: 60%; width: 60%;"
                           src="https://img.icons8.com/ios/50/000000/visit.png"></el-image>
               </el-col>
-              <el-col span="14">
+              <el-col :span=14>
                 <h2>145.66 M</h2>
                 <h4>总访问量</h4>
               </el-col>
             </el-row>
           </el-card>
         </el-col>
-        <el-col span="6">
+        <el-col :span=6>
           <el-card>
             <el-row>
-              <el-col span="10">
+              <el-col :span=10>
                 <el-image style="height: 60%; width: 60%;"
                           src="https://img.icons8.com/pastel-glyph/50/000000/shopping-cart.png"></el-image>
               </el-col>
-              <el-col span="14">
+              <el-col :span=14>
                 <h2>1400.01 M</h2>
                 <h4>总加购量</h4>
               </el-col>
             </el-row>
           </el-card>
         </el-col>
-        <el-col span="6">
+        <el-col :span=6>
           <el-card>
             <el-row>
-              <el-col span="10">
+              <el-col :span=10>
                 <el-image style="height: 60%; width: 60%;"
                           src="https://img.icons8.com/carbon-copy/100/000000/bill.png"></el-image>
               </el-col>
-              <el-col span="14">
+              <el-col :span=14>
                 <h2>862.12 M</h2>
                 <h4>总订单量</h4>
               </el-col>
@@ -114,12 +114,12 @@
           </el-card>
         </el-col>
       </el-row>
-      <el-row style="margin: 20px 80px 20px 80px;" gutter="20">
+      <el-row style="margin: 20px 80px 20px 80px;" :gutter=20>
         <!--管理书籍-->
-        <el-col span="12">
+        <el-col :span=12>
           <el-card>
-            <el-row gutter="20" slot="header">
-              <el-col span="4">
+            <el-row :gutter=20 slot="header">
+              <el-col :span=4>
                 <!-- Form -->
                 <el-button type="text" @click="dialogFormVisible = true"> 新增图书 </el-button>
 
@@ -147,7 +147,7 @@
                     <el-form-item label="简介" :label-width="formLabelWidth" prop="introduction">
                       <el-input v-model="bookForm.introduction" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="图片" :label-width="formLabelWidth" prop="image">
+                    <el-form-item label="图片路径" :label-width="formLabelWidth" prop="image">
                       <el-input v-model="bookForm.image" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="库存" :label-width="formLabelWidth" prop="inventory"
@@ -165,16 +165,17 @@
                   </el-form>
                 </el-dialog>
               </el-col>
-              <el-col span="8">&nbsp;</el-col>
-              <el-col span="8">
+              <el-col :span=8>&nbsp;</el-col>
+              <el-col :span=8>
                 <el-input placeholder="搜索书籍" size="medium" v-model="searchbookstr" @input="searchBook"></el-input>
               </el-col>
             </el-row>
-            <el-row :gutter="20">
+            <el-row :gutter=20>
               <div v-for="book in this.activebooks" v-bind:key="book.id">
-                <el-col :span="12">
-                  <el-card shadow="hover" style="height: 480px">
-                    <el-image :src="require('../assets/books/' + book.image)" style="width: 75%; height: 200px"></el-image>
+                <el-col :span=12>
+                  <el-card shadow="hover" style="height: 540px">
+<!--                    <el-image :src="require('../assets/books/' + book.image)" style="width: 75%; height: 200px"></el-image>-->
+                    <el-image :src="book.imageBase64" style="width: 75%; height: 200px" alt="图片走丢了"></el-image>
                     <el-input size="small" v-model="book.bookname" :disabled="book.isEditable === false">
                       <template slot="prepend">书名</template>
                     </el-input>
@@ -193,31 +194,43 @@
                     <el-input size="small" v-model="book.inputimage" :disabled="book.isEditable === false">
                       <template slot="prepend">封面路径</template>
                     </el-input>
-                    <el-button v-if="book.isEditable === false" size="small" round="true" plain="true" @click="handleEdit(book.id)">
+                    <el-button v-if="book.isEditable === false" size="small" round plain @click="handleEdit(book.id)">
                       修改<i class="el-icon-edit el-icon--right"></i></el-button>
-                    <el-button v-else size="small" round="true" plain="true" @click="handleEdit(book.id)">
+                    <el-button v-else size="small" round plain @click="handleEdit(book.id)">
                       提交<i class="el-icon-edit el-icon--right"></i></el-button>
 
-                    <el-button size="small" round="true" plain="true" @click="deleteBook(book.id)">
+                    <el-button size="small" round plain @click="deleteBook(book.id)">
                       <i class="el-icon-delete el-icon--left"></i>删除
                     </el-button>
+
+                    <el-upload
+                      class="upload-demo"
+                      ref="upload"
+                      action=""
+                      :limit="1"
+                      :on-change="getFile"
+                      :auto-upload="false">
+                      <el-button slot="trigger" size="small" round plain :disabled="book.isEditable === false">
+                        选取并上传图片</el-button>
+                      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                    </el-upload>
                   </el-card>
                 </el-col>
               </div>
             </el-row>
           </el-card>
         </el-col>
-        <el-col span="12">
+        <el-col :span=12>
           <el-card>
-            <el-row gutter="20" slot="header">
-              <el-col span="4">
+            <el-row :gutter=20 slot="header">
+              <el-col :span=4>
                 <el-link>批量操作</el-link>
               </el-col>
-              <el-col span="4">
+              <el-col :span=4>
                 <el-link>统计量</el-link>
               </el-col>
-              <el-col span="8">&nbsp;</el-col>
-<!--              <el-col span="8">-->
+              <el-col :span=8>&nbsp;</el-col>
+<!--              <el-col span=8>-->
 <!--                <el-input placeholder="搜索用户" size="mini">-->
 <!--                  <el-button slot="append" icon="el-icon-search" size="mini"></el-button>-->
 <!--                </el-input>-->
@@ -300,6 +313,7 @@ export default {
       }
     }
     return {
+      imageBase64: '',
       admin_or_user: this.$cookie.get('role') === 'ADMIN',
       searchbookstr: '',
       activebooks: [],
@@ -337,9 +351,30 @@ export default {
     }
   },
   methods: {
-    changeBookInfo (index) {
-      return 1
+
+    getFile (file) {
+      this.getBase64(file.raw).then(res => {
+        this.imageBase64 = res
+      })
     },
+
+    getBase64 (file) {
+      return new Promise(function (resolve, reject) {
+        let reader = new FileReader()
+        let imgResult = ''
+        reader.readAsDataURL(file)
+        reader.onload = function () {
+          imgResult = reader.result
+        }
+        reader.onerror = function (error) {
+          reject(error)
+        }
+        reader.onloadend = function () {
+          resolve(imgResult)
+        }
+      })
+    },
+
     formatter (row, column) {
       return row.address
     },
@@ -429,11 +464,13 @@ export default {
           return
         } else this.activebooks[index].image = this.activebooks[index].inputimage
         this.activebooks[index].isEditable = false
+
         this.$axios({
           method: 'POST',
           url: 'https://localhost:9090/book/editBookInfo',
           params: {
-            id: this.activebooks[index].id,
+            // id: this.activebooks[index].id,
+            imageBase64: this.imageBase64,
             bookstr: JSON.stringify(this.activebooks[index])
           }
         }).then(response => {
@@ -492,6 +529,7 @@ export default {
             method: 'POST',
             url: 'https://localhost:9090/book/editBookInfo',
             params: {
+              imageBase64: this.imageBase64,
               bookstr: JSON.stringify(book)
             }
           }).then(response => {}).catch(error => { console.log(error) })
@@ -518,6 +556,7 @@ export default {
         this.$set(book, 'isEditable', false)
         this.$set(book, 'inputimage', book.image)
       })
+      console.log(this.activebooks)
       this.$forceUpdate()
     })
     this.getUsers().then(responsedata => {

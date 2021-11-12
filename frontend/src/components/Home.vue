@@ -53,7 +53,8 @@
     </header>
     <el-carousel :interval="4000" type="card" height="400px">
       <el-carousel-item v-for="book in this.activebooks" :key="book">
-        <el-image :src="require('../assets/books/' + book.image)" style="height: 100%" @click="_route_to_book_details(book.id)"></el-image>
+<!--        <el-image :src="require('../assets/books/' + book.image)" style="height: 100%" @click="_route_to_book_details(book.id)"></el-image>-->
+        <el-image :src="book.imageBase64" style="height: 100%" @click="_route_to_book_details(book.id)"></el-image>
       </el-carousel-item>
     </el-carousel>
     <!--图书视图-->
@@ -62,7 +63,8 @@
         <div v-for="book in this.activebooks" v-bind:key="book.id">
           <el-col :span="6" class="el-col">
             <el-card body-style class="el-card" style="height: 560px;">
-              <el-image :src="require('../assets/books/' + book.image)" style="height: 360px;" @click="_route_to_book_details(book.id)"></el-image>
+<!--              <el-image :src="require('../assets/books/' + book.image)" style="height: 360px;" @click="_route_to_book_details(book.id)"></el-image>-->
+              <el-image :src="book.imageBase64" style="height: 360px;" @click="_route_to_book_details(book.id)"></el-image>
               <el-link :underline="false" @click="_route_to_book_details(book.id)"><p>书名：{{ book.bookname }}</p></el-link>
               <br>
               <p>作者：{{ book.author }}</p>

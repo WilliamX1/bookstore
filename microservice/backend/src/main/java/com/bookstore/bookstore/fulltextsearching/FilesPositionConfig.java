@@ -9,8 +9,8 @@ public class FilesPositionConfig {
 
     }
 
-    public final static String indexPath = "index\\INDEX_PATH\\";
-    public final static String docsDir = "index\\DOCS_PATH\\";
+    public final static String indexPath = "backend\\index\\INDEX_PATH\\";
+    public final static String docsDir = "backend\\index\\DOCS_PATH\\";
     public final static String docsType = "json";
     public static String docsPath(String pathName, String type) {
         return docsDir + pathName + "." + type;

@@ -83,6 +83,18 @@ public class Book {
     @Column(name = "state")
     private Integer state;
 
+//    @Transient
+//    @JsonIgnore
+//    private BookImage bookImage;
+//
+//    public BookImage getBookImage() {
+//        return bookImage;
+//    }
+//
+//    public void setBookImage(BookImage bookImage) {
+//        this.bookImage = bookImage;
+//    }
+
     @Override
     public String toString() {
         return "Book{" +
