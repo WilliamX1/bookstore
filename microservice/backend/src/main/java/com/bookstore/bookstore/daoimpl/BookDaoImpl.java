@@ -1,13 +1,11 @@
 package com.bookstore.bookstore.daoimpl;
 
-import com.bookstore.bookstore.entity.Book;
-import com.bookstore.bookstore.entity.BookImage;
+import com.bookstore.bookstore.entity.*;
 import com.bookstore.bookstore.fulltextsearching.ReadWriteFiles;
 import com.bookstore.bookstore.fulltextsearching.FilesPositionConfig;
 import com.bookstore.bookstore.fulltextsearching.SearchFiles;
 import com.bookstore.bookstore.dao.BookDao;
-import com.bookstore.bookstore.repository.BookImageRepository;
-import com.bookstore.bookstore.repository.BookRepository;
+import com.bookstore.bookstore.repository.*;
 import com.bookstore.bookstore.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 @Slf4j
@@ -32,6 +32,14 @@ public class BookDaoImpl implements BookDao {
     @Autowired
     private BookImageRepository bookImageRepository;
 
+    @Autowired
+    private TagNodeRepository tagNodeRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
+    private TagNameRepository tagNameRepository;
 
     /* 获取图书信息 */
     public List<Book> getBooks () {
@@ -155,4 +163,28 @@ public class BookDaoImpl implements BookDao {
     public List<BookImage> getBookImages() {
         return bookImageRepository.findAll();
     }
+
+    /* 根据标签进行模糊搜索 */
+    public List<Book> getBooksByTag(String tag) {
+
+        List<TagNode> tagNodeList = new ArrayList<>();
+
+        TagNode tagNode = tagNodeRepository.findByName(tag);
+        if (tagNode != null) tagNodeList.add(tagNode);
+        List<TagNode> relatedTagNodes = tagNodeRepository.findByRelatedTagNodeName(tag);
+        if (relatedTagNodes != null) tagNodeList.addAll(relatedTagNodes);
+
+        Set<Book> bookList = new HashSet<>();
+
+        for (TagNode tagNode1 : tagNodeList) {
+            String name = tagNode1.getName();
+            TagName tagName = tagNameRepository.findByName(name);
+            List<Tag> tagList = tagRepository.findByTagName(tagName);
+
+            for (Tag tag1 : tagList)
+                bookList.add(tag1.getBook());
+        };
+
+        return new ArrayList<>(bookList);
+    };
 }

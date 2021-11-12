@@ -55,4 +55,9 @@ public class BookServiceImpl implements BookService {
     public List<BookImage> getBookImages() {
         return bookDao.getBookImages();
     }
+
+    /* 通过 tag 模糊搜索获取书籍 */
+    public List<Book> getBooksByTag(String tag) {
+        return bookDao.getBooksByTag(tag);
+    };
 }

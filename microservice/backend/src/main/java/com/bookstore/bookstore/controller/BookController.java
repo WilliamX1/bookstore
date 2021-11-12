@@ -70,4 +70,8 @@ public class BookController {
     public ResponseEntity<List<Book>> fulltextSearchBook(String searchbookstr) {
         return new ResponseEntity<>(bookService.fulltextSearchBook(searchbookstr), HttpStatus.OK);
     }
+    @GetMapping("/book/getBooksByTag")
+    public ResponseEntity<List<Book>> getBooksByTag(String searchbookstr) {
+        return new ResponseEntity<>(bookService.getBooksByTag(searchbookstr), HttpStatus.OK);
+    }
 }

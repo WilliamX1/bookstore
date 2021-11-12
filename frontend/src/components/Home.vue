@@ -36,11 +36,19 @@
               </el-input>
             </el-menu-item>
             <el-menu-item>
-              <el-switch
-                v-model="searchtype"
-                active-text="全文搜索"
-                inactive-text="普通搜索">
-              </el-switch>
+<!--              <el-switch-->
+<!--                v-model="searchtype"-->
+<!--                active-text="全文搜索"-->
+<!--                inactive-text="普通搜索">-->
+<!--              </el-switch>-->
+              <el-select v-model="searchtype" placeholder="搜索方式">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </el-menu-item>
             <el-menu-item>
               <router-link to="/Admin">
@@ -120,7 +128,17 @@ export default {
       pagetotalcount: 0,
       pagesize: 4,
       curpageidx: 1,
-      searchtype: true
+      searchtype: 1,
+      options: [{
+        value: 1,
+        label: '普通搜索'
+      }, {
+        value: 2,
+        label: '全文搜索'
+      }, {
+        value: 3,
+        label: '标签搜索'
+      }]
     }
   },
   created () {
@@ -152,18 +170,55 @@ export default {
     },
     /* 根据书名模糊搜索 */
     /* 全文搜索 */
+    /* 根据标签模糊搜索 */
     searchBook (searchbookstr) {
       if (searchbookstr === '') {
         this.activebooks = JSON.parse(localStorage.getItem('books'))
       } else {
+        let url
+        switch (this.searchtype) {
+          case 1: /* 普通搜索 */
+            url = 'https://localhost:9090/book/searchBookByBookname'
+            break
+          case 2: /* 全文搜索 */
+            url = 'https://localhost:9090/book/fulltextSearchBook'
+            break
+          case 3: /* 标签搜索 */
+            url = 'https://localhost:9090/book/getBooksByTag'
+            break
+        }
         this.$axios({
           methods: 'GET',
-          url: this.searchtype === true ? 'https://localhost:9090/book/fulltextSearchBook' : 'https://localhost:9090/book/searchBookByBookname',
+          url: url,
           params: {
             searchbookstr: searchbookstr
           }
         }).then(response => {
           this.activebooks = response.data
+          this.axios({
+            method: 'GET',
+            url: 'https://localhost:9090/book/getBookImages', /* 获取图书 base64 图片信息 */
+            params: {
+              username: this.$cookie.get('username'),
+              password: this.$cookie.get('password')
+            }
+          }).then(response => {
+            if (response.status === 200) {
+              let bookImages = response.data
+              for (let i = 0; i < this.activebooks.length; i++) {
+                for (let j = 0; j < bookImages.length; j++) {
+                  if (this.activebooks[i].id === bookImages[j].bookId) {
+                    this.$set(this.activebooks[i], 'imageBase64', bookImages[j].imageBase64)
+                    break
+                  }
+                }
+              }
+              // this.$forceUpdate()
+              console.log(this.activebooks)
+            }
+          }).catch(error => {
+            console.log(error)
+          })
         }).catch(error => {
           console.log(error)
         })

@@ -24,4 +24,6 @@ public interface BookService {
     List<Book> fulltextSearchBook(String text);
     /* 获取图书照片信息 */
     List<BookImage> getBookImages();
+    /* 通过 tag 模糊搜索获取书籍 */
+    List<Book> getBooksByTag(String tag);
 }

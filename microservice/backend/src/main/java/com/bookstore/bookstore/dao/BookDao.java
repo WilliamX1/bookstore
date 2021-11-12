@@ -25,4 +25,6 @@ public interface BookDao {
     Book getBookById (Integer bookid);
     /* 获取图书图片信息 */
     List<BookImage> getBookImages();
+    /* 根据标签进行模糊搜索 */
+    List<Book> getBooksByTag(String tag);
 }

@@ -215,3 +215,260 @@ https://blog.csdn.net/weixin_39214304/article/details/84791953
 ### 要求
 1. 为每一本图书都添加一些标签，在 Neo4J 中将这些标签构建成一张图，类似右图。
 2. 在系统中增加一项搜索功能，如果用户按照标签搜索，你可以将 Neo4J 中存储的与用户选中的标签以及通过 2 重关系可以关联到的所有标签都选出，作为搜索的依据，在 MySQL 中搜索所有带有这些标签中任意一个或多个的图书，作为图书搜索结果呈现给用户。
+
+### 设计原理
+#### Neo4j 简介
+Neo4j 是一个高性能的 NoSQL 图形数据库，它将结构化数据存储在网络上而不是表中。它是一个嵌入式、基于磁盘的、具备完全的事务特性的 JAVA 持久化引擎。
+
+Neo4j 也可以被看做是一个高性能的图引擎，该引擎具有成熟数据库的所有特性。程序员工作在一个面向对象的、灵活的网络结构下而不是严格的、静态的表中，但又可以享受到具备完全的事务特性。
+
+#### 设计思路
+运用 Neo4j 查找邻近的标签名，在 MySQL 中查找到对应的标签 ID，并依次来查找所有拥有这些标签的书籍。
+
+### 代码实现
+#### SpringBoot 后端代码
+
+**[pom.xml]** 导入 Neo4j 包。
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-data-neo4j</artifactId>
+</dependency>
+```
+
+**[application.properties]** 配置 Neo4j 数据库。
+
+```xml
+# neo4j 图数据库配置
+spring.neo4j.uri=bolt://localhost:7687
+spring.neo4j.authentication.username=neo4j
+spring.neo4j.authentication.password=200176
+```
+
+**[BookstoreApplication]** 运用 Neo4j 随机构建标签关系。
+
+```Java
+@SpringBootApplication
+@EnableNeo4jRepositories
+public class BookstoreApplication {
+	@Bean
+    CommandLineRunner createTagNodeAndConnect(TagNodeRepository tagNodeRepository, TagNameRepository tagNameRepository) {
+        return args -> {
+
+            tagNodeRepository.deleteAll();
+
+            List<TagName> tagNameList = tagNameRepository.findAll();
+
+            List<TagNode> tagNodeList = new ArrayList<>();
+
+            for (TagName tagName : tagNameList) {
+                TagNode tagNode = new TagNode(tagName.getName());
+                tagNodeRepository.save(tagNode);
+                tagNodeList.add(tagNode);
+            }
+
+            int n = tagNodeList.size();
+            Random random = new Random();
+
+            for (int i = 0; i < 2 * n; i++) {
+                int start = random.nextInt(n - 1) + 1;
+                int end = random.nextInt(n - 1) + 1;
+
+                if (start == end) continue;
+
+                TagNode start_node = tagNodeList.get(start);
+                TagNode end_node = tagNodeList.get(end);
+
+                if (start_node != null && end_node != null) {
+                    start_node.relatedTo(end_node);
+                    tagNodeRepository.save(start_node);
+                }
+
+            }
+        };
+    }
+```
+
+**[TagNode]** 用于 Neo4j 的结点类。
+
+```Java
+@Node("tagNode")
+public class TagNode {
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String name;
+	...
+}
+```
+
+**[TagNodeRepository]** 集成 Neo4jRepository，用于进行结点查询和相邻节点查询。
+
+```Java
+public interface TagNodeRepository extends Neo4jRepository<TagNode, Long> {
+    TagNode findByName(String name);
+    List<TagNode> findByRelatedTagNodeName(String name);
+}
+```
+
+**[TagName]** 用于记录标签的名字。
+
+```Java
+@Entity
+@Table(name = "tagname")
+@JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@DynamicUpdate
+@DynamicInsert
+public class TagName {
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "tagName")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Tag> tagList = new ArrayList<>();
+
+    @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+    @Column(name = "id")
+    private Integer id;
+
+    @Column(name = "name")
+    private String name;
+    
+    ...
+}
+```
+
+**[Tag]** 用于记录书籍的多个标签。
+
+```Java
+@Entity
+@Table(name = "tag")
+@JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@DynamicUpdate
+@DynamicInsert
+
+public class Tag {
+    @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+    @Column(name = "id")
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "bookid", referencedColumnName = "id")
+    private Book book;
+
+    @ManyToOne
+    @JoinColumn(name = "tagnameid", referencedColumnName = "id")
+    private TagName tagName;
+    
+    ...
+}
+```
+
+**[BookDaoImpl]** 新增按照标签进行模糊搜索。
+
+```Java
+public List<Book> getBooksByTag(String tag) {
+    List<TagNode> tagNodeList = new ArrayList<>();
+
+    TagNode tagNode = tagNodeRepository.findByName(tag);
+    if (tagNode != null) tagNodeList.add(tagNode);
+    List<TagNode> relatedTagNodes = tagNodeRepository.findByRelatedTagNodeName(tag);
+    if (relatedTagNodes != null) tagNodeList.addAll(relatedTagNodes);
+
+    Set<Book> bookList = new HashSet<>();
+
+    for (TagNode tagNode1 : tagNodeList) {
+        String name = tagNode1.getName();
+        TagName tagName = tagNameRepository.findByName(name);
+        List<Tag> tagList = tagRepository.findByTagName(tagName);
+
+        for (Tag tag1 : tagList)
+        	bookList.add(tag1.getBook());
+    };
+
+    return new ArrayList<>(bookList);
+};
+```
+
+**[BookController]** 新增按照标签进行模糊搜索的接口。在 Service 层和 Dao 层也增加对应的接口和实现。
+
+```Java
+@GetMapping("/book/getBooksByTag")
+public ResponseEntity<List<Book>> getBooksByTag(String searchbookstr) {
+	return new ResponseEntity<>	(bookService.getBooksByTag(searchbookstr), HttpStatus.OK);
+}
+```
+
+#### Vue 前端代码
+
+**[main]** 改变函数接口。
+
+```html
+<el-select v-model="searchtype" placeholder="搜索方式">
+    <el-option
+    v-for="item in options"
+    :key="item.value"
+    :label="item.label"
+    :value="item.value">
+    </el-option>
+</el-select>
+```
+
+```Javascript
+...
+switch (this.searchtype) {
+    case 1: /* 普通搜索 */
+        url = 'https://localhost:9090/book/searchBookByBookname'
+        break
+    case 2: /* 全文搜索 */
+        url = 'https://localhost:9090/book/fulltextSearchBook'
+        break
+    case 3: /* 标签搜索 */
+        url = 'https://localhost:9090/book/getBooksByTag'
+        break
+}
+```
+
+### 代码运行结果
+在 neo4j 的网址上查看图形化节点。
+
+![3](./3.png)
+
+通过 postman 发送请求得到返回的书籍列表。
+
+![6](./6.png)
+
+在前端通过标签搜索关键词 "数据管理" 得到结果。
+
+![4](./4.png)
+
+后端数据库表格。
+
+![5](./5.png)
+
+### 项目关联文件
+[BookController](./BookController.java)
+[BookDao](./BookDao.java)
+[BookDaoImpl](./BookDaoImpl.java)
+[Book](./Book.java)
+[Tag](./Tag.java)
+[TagName](./TagName.java)
+[TagNode](./TagNode.java)
+[TagNameRepository](./TagNameRepository.java)
+[TagNodeRepository](./TagNodeRespository.java)
+[TagRepository](./TagRepository.java)
+[BookService](./BookService.java)
+[BookstoreApplication](./BookstoreApplication.java)
+[application](./application.properties)
+[pom.xml](./pom.xml)
+
+### 参考
+[16-neo4j](./16-neo4j.pdf)
+https://blog.csdn.net/jing_zhong/article/details/112557084
+https://spring.io/guides/gs/accessing-data-neo4j/
+https://juejin.cn/post/6895338320956653581
