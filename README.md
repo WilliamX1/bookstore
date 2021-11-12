@@ -35,24 +35,31 @@
 ### 技术栈
 **前端**: Vue、WebPack </br>
 **后端**: SpringBoot、Maven </br>
-**数据库**: MySQL、Redis </br>
+**数据库**: MySQL、Redis、MongoDB、Neo4j </br>
 **中间件**: Activemq、WebSocket、Lucene、SOAP、WSDL、Eureka </br>
 
 ### 技术亮点
-#### [Activemq](https://github.com/WilliamX1/bookstore/blob/main/hw/hw1/hw1.md)
+#### [Activemq](https://github.com/WilliamX1/bookstore/blob/main/hw/hw1/README.md)
 使用 Activemq 实现下订单功能消息队列。当用户点击下订单时，后端 Controller 先使用生产者将用户请求转发给消费者，并迅速返回给用户该订单正在执行中。后端消费者将在空闲时期完成这笔交易。有效提高了下订单的效率和吞吐量
-#### [WebSocket](https://github.com/WilliamX1/bookstore/blob/main/hw/hw2/hw2.md)
+#### [WebSocket](https://github.com/WilliamX1/bookstore/blob/main/hw/hw2/README.md)
 使用 WebSocket 实现一个在线聊天室，用户可以在其中进行实时群聊。
-#### [Transaction](https://github.com/WilliamX1/bookstore/blob/main/hw/hw2/hw2.md)
+#### [Transaction](https://github.com/WilliamX1/bookstore/blob/main/hw/hw2/README.md)
 运用增加 SpringBoot 注释方式，增加对下订单服务的事务控制功能，确保下订单动作和数据库的一致性和完整性。
-#### [MultiThreading](https://github.com/WilliamX1/bookstore/blob/main/hw/hw3/hw3.md)
+#### [MultiThreading](https://github.com/WilliamX1/bookstore/blob/main/hw/hw3/README.md)
 采用面向切口编程理念，对用户访问接口进行访问次数统计。且使用 **AtomicCounter** 进行原子性计数，保证多线程访问时数据安全可靠。
-#### [Redis](https://github.com/WilliamX1/bookstore/blob/main/hw/hw3/hw3.md)
+#### [Redis](https://github.com/WilliamX1/bookstore/blob/main/hw/hw3/README.md)
 使用 Redis 数据库作书籍信息的缓存，大大减少 MySQL 数据库压力，提高访问速度和稳定性。
-#### [Lucene](https://github.com/WilliamX1/bookstore/blob/main/hw/hw4/hw4.md)
+#### [Lucene](https://github.com/WilliamX1/bookstore/blob/main/hw/hw4/README.md)
 使用 Lucene 全文搜索引擎，对书籍简介文本建立索引，使用户可以快速高效进行全文搜索。
-#### [SOAP](https://github.com/WilliamX1/bookstore/blob/main/hw/hw4/hw4.md)
+#### [SOAP](https://github.com/WilliamX1/bookstore/blob/main/hw/hw4/README.md)
 使用 SOAP Web Service，将书籍的全文搜索开发并部署成 Web Service，使得其他应用可以跨平台访问。
-#### [microservice](https://github.com/WilliamX1/bookstore/blob/main/hw/hw5/hw5.md)
+#### [microservice](https://github.com/WilliamX1/bookstore/blob/main/hw/hw5/README.md)
 使用 Eureka Server 和 Eureka Client 构建 SpringBoot 微服务架构，通过将功能分解到各个离散的服务中以实现解耦，并使用 Netflix-Zuul 进行路由，实现负载均衡。
+#### [MongoDB](https://github.com/WilliamX1/bookstore/blob/main/hw/hw8/README.md)
+将书籍图片信息转换成 base64 字符串存入 MongoDB 数据库，增加了项目可移植性。
+#### [Neo4j](https://github.com/WilliamX1/bookstore/blob/main/hw/hw8/README.md)
+为书籍添加多个标签，使用 Neo4j 数据库存储标签类型和相互关联性，使得用户可以根据标签模糊搜索含有相邻标签的书籍。
+
+
+
 
