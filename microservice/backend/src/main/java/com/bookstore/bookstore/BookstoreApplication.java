@@ -55,40 +55,40 @@ public class BookstoreApplication {
         return tomcatServletWebServerFactory;
     }
 
-    @Bean
-    CommandLineRunner createTagNodeAndConnect(TagNodeRepository tagNodeRepository, TagNameRepository tagNameRepository) {
-        return args -> {
-
-            tagNodeRepository.deleteAll();
-
-            List<TagName> tagNameList = tagNameRepository.findAll();
-
-            List<TagNode> tagNodeList = new ArrayList<>();
-
-            for (TagName tagName : tagNameList) {
-                TagNode tagNode = new TagNode(tagName.getName());
-                tagNodeRepository.save(tagNode);
-                tagNodeList.add(tagNode);
-            }
-
-            int n = tagNodeList.size();
-            Random random = new Random();
-
-            for (int i = 0; i < 2 * n; i++) {
-                int start = random.nextInt(n - 1) + 1;
-                int end = random.nextInt(n - 1) + 1;
-
-                if (start == end) continue;
-
-                TagNode start_node = tagNodeList.get(start);
-                TagNode end_node = tagNodeList.get(end);
-
-                if (start_node != null && end_node != null) {
-                    start_node.relatedTo(end_node);
-                    tagNodeRepository.save(start_node);
-                }
-
-            }
-        };
-    }
+//    @Bean
+//    CommandLineRunner createTagNodeAndConnect(TagNodeRepository tagNodeRepository, TagNameRepository tagNameRepository) {
+//        return args -> {
+//
+//            tagNodeRepository.deleteAll();
+//
+//            List<TagName> tagNameList = tagNameRepository.findAll();
+//
+//            List<TagNode> tagNodeList = new ArrayList<>();
+//
+//            for (TagName tagName : tagNameList) {
+//                TagNode tagNode = new TagNode(tagName.getName());
+//                tagNodeRepository.save(tagNode);
+//                tagNodeList.add(tagNode);
+//            }
+//
+//            int n = tagNodeList.size();
+//            Random random = new Random();
+//
+//            for (int i = 0; i < 2 * n; i++) {
+//                int start = random.nextInt(n - 1) + 1;
+//                int end = random.nextInt(n - 1) + 1;
+//
+//                if (start == end) continue;
+//
+//                TagNode start_node = tagNodeList.get(start);
+//                TagNode end_node = tagNodeList.get(end);
+//
+//                if (start_node != null && end_node != null) {
+//                    start_node.relatedTo(end_node);
+//                    tagNodeRepository.save(start_node);
+//                }
+//
+//            }
+//        };
+//    }
 }
