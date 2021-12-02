@@ -95,6 +95,12 @@ server {
 
 ### 代码运行结果
 
+命令行执行
+
+```bash
+> start nginx
+```
+
 直接访问服务端口 8181，没有登录则返回 401。
 
 ![1](./1.png)
@@ -133,6 +139,7 @@ server {
 
 ### 项目关联文件
 
+[eureka_client](./src)
 [application.properties](./application.properties)
 [EurekaClientApplication.java](./EurekaClientApplication.java)
 [pom.xml](./pom.xml)
@@ -150,4 +157,24 @@ https://segmentfault.com/a/1190000037594169
 https://blog.csdn.net/chali1314/article/details/113310981
 https://database.51cto.com/art/202103/650044.htm
 https://blog.csdn.net/bj_chengrong/article/details/103814720
+
+------
+
+<font color=red> 以下是 pdf-20 内容 </font>
+
+### 要求
+
+3. 参照上课演示的案例，将上述系统实现容器化部署，即负载均衡器、缓存、注册中心和服务集群都在容器中部署
+
+### 情况说明
+
+由于在对后端项目进行打包时无法完成，而 docker 环境难以配置，因此没有办法将系统部署到 docker 容器中，比较遗憾。
+
+![11](./11.png)
+
+### 参考
+
+[22-virtualization.pdf](./22-virtualization.pdf)
+https://blog.csdn.net/fanrenxiang/article/details/80864908
+https://www.ruanyifeng.com/blog/2018/02/docker-tutorial.html
 
