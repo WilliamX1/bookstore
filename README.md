@@ -59,7 +59,10 @@
 将书籍图片信息转换成 base64 字符串存入 MongoDB 数据库，增加了项目可移植性。
 #### [Neo4j](https://github.com/WilliamX1/bookstore/blob/main/hw/hw8/README.md)
 为书籍添加多个标签，使用 Neo4j 数据库存储标签类型和相互关联性，使得用户可以根据标签模糊搜索含有相邻标签的书籍。
-
+#### [Nginx](https://github.com/WilliamX1/bookstore/blob/main/hw/hw10/README.md)
+构建 E-Book 的集群，包含 1 个 nginx 实例（负载均衡）+ 1 个 Redis 实例（存储 session）+ 2 个 Tomcat 实例。
+#### [MapReduce](https://github.com/WilliamX1/bookstore/blob/main/hw/hw11/README.md)
+利用 Hadoop 的 MapReduce 实现对书籍简介的关键词统计。
 
 
 
