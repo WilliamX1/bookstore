@@ -1,0 +1,60 @@
+Co-authored by Patterson and Hennessy, winners of the 2017 Turing Award,
+this book is a classic textbook in the field of computer architecture,
+emphasizing the co-design of software and hardware and its impact on performance.
+This book uses the ARMv8 architecture to explain the basic principles of hardware technology,
+assembly language, computer arithmetic operations, pipeline, memory hierarchy, and I/O.
+The new content covers tablet computers, cloud infrastructure,
+ARM (mobile computing devices) and x86 (cloud computing) architectures. New examples include IntelCorei7,
+ARMCortex-A53, and NVIDIAFermiGPU.
+This book is suitable as a teaching material for computer majors in colleges and universities,
+and is also suitable for reference by the majority of professional and technical personnel.
+
+This book uses the "problem-driven",
+"basic first" and "combination of examples and practice" methods to clarify the basic C++ features.
+The book is divided into three parts. The first part introduces the basic concepts of C++ programming,
+the second part introduces object-oriented programming methods,
+and the third part introduces the content of algorithms and data structures.
+In order to help students better grasp the relevant knowledge, each chapter of this book includes the following modules:
+objectives, introduction, key points, check points, questions and case studies, summary of this chapter,
+online quizzes, programming exercises, hints, tips, warnings And teaching tips.
+This book can be used as a textbook for computer and related professional C++ programming courses in colleges and universities,
+and can also be used as a self-study reference book for C++ programming.
+
+This book aims to teach readers how to use Python language to program and solve problems.
+The book is equipped with a large number of easy-to-understand examples, pseudo-codes, and flowcharts.
+Each chapter is also accompanied by learning cases,
+which aims to help readers master the method of solving problems through step-by-step analysis.
+This book introduces basic knowledge such as the working principle of computers, data storage and backup,
+first gives an overview of the interactive mode, script mode and IDLE environment of the Python language,
+and then introduces the decision-making structure and Boolean logic of Python, files and exceptions, and lists in turn.
+With knowledge of tuples, classes, and object-oriented programming, event-driven GUI programming is also introduced after.
+
+This book shows the methods and techniques of using MATLAB to solve various typical problems.
+It not only guides readers to write clear, efficient and good MATLAB programs,
+but also introduces a large number of practical functions of MATLAB. The book has 9 chapters.
+The first 7 chapters cover the basic concepts and implementation of MATLAB,
+and the latter 2 chapters introduce more advanced applications. The content of this book is comprehensive,
+easy to understand, suitable for engineering and computer professional teaching materials,
+but also as a self-study book for the majority of scientific and technological workers to master MATLAB calculation tools.
+
+The book is divided into three parts. The first part,
+from Chapter 1 to Chapter 4,
+aims to review the concepts of C++ programming and the analysis and measurement methods of program performance.
+The second part, from Chapter 5 to Chapter 16, studies data structures, including linear tables, arrays and matrices,
+stacks, queues, dictionaries, binary trees, priority queues, competition trees, search trees, and graphs. The third part,
+from Chapter 17 to Chapter 21, studies common algorithms, including greedy algorithm, divide and conquer algorithm,
+dynamic programming, backtracking algorithm and branch and bound algorithm.
+This book has more than 800 practice questions and more than 50 application examples. The content is extensive,
+the organization is reasonable, the discussion is clear, the gradual progress,
+and the analysis and measurement system of the program performance are nuanced.
+This book is not only a classic textbook of data structures and algorithms,
+but also an ideal reference book in the field of computer science and engineering.
+
+The study of computer complexity theory is one of the important research fields of computer science,
+and Chistos.H.Papadimitriou is one of the experts in this field.
+This book is a textbook comprehensively expounding the theory of computer complexity and its progress in recent years.
+It mainly contains basic concepts related to computational complexity theory such as algorithm Turing machine and computability;
+Boolean logic, first-order logic, and undecidability in logic The basic knowledge of complexity theory;
+the core content of complexity theory such as the concepts of P, NP, and NP complete and the relationship between them;
+random algorithms, approximate algorithms, parallel algorithms and their complexity theories;
+and Introduction to complexity classes such as polynomial spaces other than NP.
