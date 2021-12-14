@@ -137,10 +137,14 @@ Question：在我的程序运行时，Mapper 和 Reducer 各有多少个？以�
 
 Answer：
 1. Mapper 的数量由输入文件的数量和大小共同决定，每个文件都至少对应一个 Mapper，而如果单个文件大小超过 128M 则需要每 128M 分一个 Mapper，目前 Mapper 已经不能手动指定精确值，而是由框架确定。在我的 E-Book 中，总共有 3 个文件，且每个文件数量远小于 128M，因此按照计算来说应该有 3 个 Mapper。
-2. Reducer 的数量可以由自己确定，有多少个 Reducer 就会有多少个输出统计文件，我指定的 Reducer 的数量是 1。
+2. Reducer 的数量可以由自己确定，有多少个 Reducer 就会有多少个输出统计文件，我指定的 Reducer 的数量是 2，因此总共应该有 2 个 Reducer。
 ```Java
-job.setNumReduceTasks(1);
+job.setNumReduceTasks(2);
 ```
+
+经过观察，验证了上述说法。
+
+![4](./4.png)
 
 ### 项目关联文件
 

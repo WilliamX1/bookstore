@@ -29,6 +29,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 @Slf4j
 public class WordCount2 {
+    public static List<String> MapReduceNumLog = new ArrayList<>();
 
     public static class TokenizerMapper
             extends Mapper<Object, Text, Text, IntWritable>{
@@ -47,6 +48,9 @@ public class WordCount2 {
         @Override
         public void setup(Context context) throws IOException,
                 InterruptedException {
+            UUID uuid = UUID.randomUUID();
+            MapReduceNumLog.add("Mapper UUID: " + uuid);
+
             conf = context.getConfiguration();
             caseSensitive = conf.getBoolean("wordcount.case.sensitive", true);
             if (conf.getBoolean("wordcount.skip.patterns", false)) {
@@ -101,6 +105,11 @@ public class WordCount2 {
             extends Reducer<Text,IntWritable,Text,IntWritable> {
         private IntWritable result = new IntWritable();
 
+        public IntSumReducer() {
+            UUID uuid = UUID.randomUUID();
+            MapReduceNumLog.add("Reducer UUID: " + uuid);
+        }
+
         public void reduce(Text key, Iterable<IntWritable> values,
                            Context context
         ) throws IOException, InterruptedException {
@@ -121,12 +130,12 @@ public class WordCount2 {
         Job job = Job.getInstance(conf, "word count");
         job.setJarByClass(WordCount2.class);
         job.setMapperClass(TokenizerMapper.class);
-        job.setCombinerClass(IntSumReducer.class);
+//        job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
-        job.setNumReduceTasks(1);
+        job.setNumReduceTasks(2);
 
         FileSystem fileSystem = FileSystem.get(new URI(in.toString()), new Configuration());
         if (fileSystem.exists(out))
@@ -140,6 +149,13 @@ public class WordCount2 {
             FileInputFormat.addInputPath(job, new Path(input_path + "\\" + input_file));
         }
 
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        int res = job.waitForCompletion(true) ? 0 : 1;
+
+        System.out.println();
+        for (String log : MapReduceNumLog) {
+            System.out.println(log);
+        }
+
+        System.exit(res);
     }
 }
