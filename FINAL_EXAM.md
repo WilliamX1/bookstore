@@ -2,6 +2,115 @@
 
 ## Content
 
+- [企业级 Java 网页应用系统](#企业级-java-网页应用系统)
+	- [有状态服务和无状态服务](#有状态服务和无状态服务)
+- [消息机制](#消息机制)
+	- [消息中间件](#消息中间件)
+	- [JMS](#java-消息服务--java-message-service-jms)
+	- [消息风格](#消息风格)
+		- [点对点](#点对点)
+		- [发布订阅](#发布订阅-pub--sub) 
+	- [卡夫卡](#卡夫卡)
+- [WebSocket](#websocket)
+- [事务管理](#事务管理-transaction-management)
+	- [事务传播行为](#事务传播行为)
+	- [事务隔离级别](#事务隔离级别)
+	- [读写锁](#读写锁)
+- [多线程](#多线程-multithreading) 
+	- [线程和进程](#基本概念)
+	- [AOP](#AOP)
+	- [内置锁](#内置锁-intrinsic-lock)
+- [缓存](#缓存-memory-caching)
+	- [MemCached](#MemCached)
+	- [Redis](#Redis)
+- [全文搜索](#全文搜索-full-text-searching)
+	- [Lucene](#lucene-简介)
+	- [Solr](#Solr)
+- [网络服务](#网络服务-web-service) 
+	- [SOAP](#soap-网络服务)
+	- [Restful](#restful-网络服务)
+- [微服务](#微服务-microservices--serverless)
+	- [Zuul](#Zuul)
+	- [Eureka](#Eureka)
+- [安全性](#安全性-security)
+	- [数字签名](#数字签名-digital-signature)
+	- [代码签名](#代码签名-code-signing)     
+	- [加密](#加密)
+	- [SSL / TLS](#ssl--tls)
+	- [单点登录 SSO](#单点登录-single-sign-on-sso)
+	- [CAS](#CAS)
+	- [安全特征](#安全特征)
+	- [安全设计策略](#安全设计策略)
+- [MySQL 优化 1](#mysql-优化-1)
+	- [索引 Index](#索引-index-1) 
+	- [常用策略](#常用策略)
+	- [限制](#限制)
+	- [作业题]
+		- [e-book-数据库应该建立什么样的索引？为什么？](#1-e-book-数据库应该建立什么样的索引为什么) 
+		- [e-book-数据库中每个表中的字段类型和长度是如何确定的？为什么？](#2-e-book-数据库中每个表中的字段类型和长度是如何确定的为什么)
+		- [如果每个用户的邮箱只有一个，是否有必要将邮箱专门存储在一张表中，然后通过外键关联？为什么？](#3-如果每个用户的邮箱只有一个是否有必要将邮箱专门存储在一张表中然后通过外键关联为什么)
+		- [主键使用自增主键和 uuid 各自的优缺点是什么？](#4-主键使用自增主键和-uuid-各自的优缺点是什么)
+- [MySQL 优化 2](#mysql-优化-2)
+	- [InnoDB 表优化](#innodb-表优化)
+	- [MyISAM 表优化](#myisam-表优化) 
+	- [MEMORY 表优化](#memory-表优化)
+	- [InnoDB 和 MyISAM 差异](#innodb-和-myisam-差异)
+- [MySQL 备份和恢复](#mysql-备份和恢复-backup--recovery) 
+	- [备份方式](#备份方式)
+	- [备份和恢复工具](#备份和恢复工具) 
+	- [作业题]
+		- [详细描述如何通过全量备份和增量备份来实现系统状态恢复](#详细描述如何通过全量备份和增量备份来实现系统状态恢复)
+		- [根据 MySQL 缓存的工作原理描述预取机制的优点](#根据-mysql-缓存的工作原理描述预取机制的优点)
+- [MySQL 分区](#mysql-分区)
+	- [原理](#原理-2)
+	- [类型](#类型)
+	- [作业题](作业-1)
+		- [阐述 Partition 机制的好处。如果数据文件在一台机器上有足够的存储空间存储，是否还需要进行 Partition？](#阐述-partition-机制的好处如果数据文件在一台机器上有足够的存储空间存储是否还需要进行-partition)  
+- [NoSQL 和 MongoDB](#nosql-和-mongodb) 
+	- [NoSQL](#NoSQL)
+	- [MongoDB](#MongoDB)
+	- [分片 Sharding](#分片-sharding)
+- [Neo4J 和图计算](#neo4j-和图计算-graph-computing) 
+	- [图数据库](#图数据库)
+	- [Neo4J](#Neo4J)
+	- [图计算](#图计算)
+- [日志结构数据库](#日志结构数据库-log-structured-database)
+	- [KV 数据结构](#kv-数据结构)
+	- [日志结构数据库](#日志结构数据库)
+		- [HTAP 混合存储](#htap-混合存储)
+	- [作业题]
+		- [阐述日志结构数据库适合什么样的应用场景](#1-阐述日志结构数据库适合什么样的应用场景) 
+		- [阐述日志结构数据库中的读放大和写放大分别是什么意思](#2-阐述日志结构数据库中的读放大和写放大分别是什么意思)
+		- [日志结构合并树中，WAL 的作用是什么。](#3-日志结构合并树中wal-的作用是什么)
+- [时序数据库](#时序数据库)
+	- [InfluxDB](#InfluxDB)
+	- [InfluxDB 文件系统布局](#influxdb-文件系统布局-file-system-layout)
+- [数据湖](#数据湖-data-lake)
+	- [PolarDB](#polardb)
+	- [MaxCompute](#maxcompute)
+	- [Data Lake](#数据湖-data-lake-1)
+- [Clustering 聚类](#聚类-clustering)
+	- [RAS](#RAS)
+	- [Nginx 负载均衡](#nginx-负载均衡)
+	- [主从备份](#主从备份)
+- [虚拟化和容器](#虚拟化和容器-virtualization--container)
+	- [虚拟化](#虚拟化-virtualization) 
+	- [容器](#容器-docker)
+- [Kubernetes](#kubernetes-k8s)
+	- [与 Docker 对比](#与-docker-对比)
+- [云计算](#云计算-cloud-computing)
+	- [边缘计算](#边缘计算-edge-computing)
+- [Hadoop](#Hadoop)
+- [Spark](#Spark)
+- [Storm](#Storm)
+- [HDFS](#HDFS)
+- [HBase](#HBase)
+- [hive](#hive)
+
+
+<div STYLE="page-break-after: always;"></div>
+
+
 ## 企业应用架构概述
 
 > 1. 企业级应用系统特征
@@ -353,7 +462,7 @@ Sec-WebSocket-Protocol: chat
 - **可以支持扩展**。Websocket 定义了扩展，用户可以扩展协议、实现部分自定义的子协议。如部分浏览器支持压缩等。
 - **更好的压缩效果**。相对于 HTTP 压缩，Websocket 在适当的扩展支持下，可以沿用之前内容的上下文，在传递类似的数据时，可以显著地提高压缩率。
 
-### 引用场景
+### 应用场景
 
 - 弹幕
 - 媒体聊天
@@ -1055,7 +1164,7 @@ Eureka Client 在程序关闭时可以向 Eureka Service 发送下线请求。�
 > 单点登录，Kerberos
 > 安全设计策略。
 
-## 数字签名 Digital Signature
+### 数字签名 Digital Signature
 
 又称公钥数字签名，是一种功能类似写在纸上的普通签名、但是使用了公钥加密领域的技术，以用于鉴别数字信息的方法。
 
@@ -1602,7 +1711,7 @@ mysql > CREATE TABLE t3(c1 VARCHAR(32765) NULL, c2 VARCHAR(32766) NULL)
 
 > 对 `InnoDB` 、`MyISAM` 、`MEMORY` 的表进行优化。
 
-### InnoDB 表格优化
+### InnoDB 表优化
 
 #### InnoDB 存储布局 Storage Layout
 
@@ -2076,7 +2185,7 @@ MongoDB 是一款开源的文档类型数据库，使用 C++ 编写而成，是 
 8. GridFS
 9. 商业版本。Commercial Support
 
-#### MongoDB 操作**
+#### MongoDB 操作
 
 1. `Create`：创建或插入操作会将新的 documents 添加到 collection 。如果该集合当前不存在，则插入操作将创建该集合。
 
@@ -2305,7 +2414,7 @@ RETURN books.title
 
 ![graph-compute-10](./README/graph-compute-10.png)
 
-![graph-compute-11](./REAMDE/graph-compute-11.png)
+![graph-compute-11](./README/graph-compute-11.png)
 
 
 ## 日志结构数据库 Log-Structured Database
@@ -2368,13 +2477,13 @@ RETURN books.title
 
 而且，使用日志结构存储，则预写日志就是数据库文件，因此只需要写入一次数据，在恢复情况下，我们只需打开数据库，从最后一个记录的索引头开始，线性地向前搜索，并在执行过程中从数据中重建任何丢失的索引更新，能够高效地保持事务的一致性。因此这种结构也很适用于**需要开启很多事务且需要高容错**的系统。
 
-### 2. 阐述日志结构数据库中的读放大和写放大分别是什么意思。
+#### 2. 阐述日志结构数据库中的读放大和写放大分别是什么意思。
 
 读放大：由于不同层级存储着不同版本的数据，因此读取数据时可能需要访问所有可能的数据文件，因此需要逐层查找，增加了大量磁盘 IO 操作，尤其是范围查询操作影响很明显，限制了 AP 查询的性能。
 
 写放大：即实际写入的物理资料量是写入资料量的多倍。例如 LSM-Tree 中当 L0 层满时将阻塞内存到磁盘的 Flush 的过程，因此 L0 层下沉 Compaction 过程无法多任务执行，尤其是异步写写放大严重，导致磁盘容易变成瓶颈，降低了 TP 事务的可用性。
 
-### 3. 日志结构合并树中，WAL 的作用是什么。
+#### 3. 日志结构合并树中，WAL 的作用是什么。
 
 Write Ahead Log 简称 WAL，意思是在将元数据的变更操作写入持久稳定的 DB 之前，先预先写入到一个 log 中，然后再由另外的操作将 log apply 到外部的持久 DB 里去。
 
